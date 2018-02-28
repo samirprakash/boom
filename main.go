@@ -17,9 +17,10 @@ package main
 import "github.com/samirprakash/boom/cmd"
 
 var (
-	currentVersion = "0.0.1"
+	// VERSION would be provided at build
+	VERSION = "0.0.1"
 )
 
 func main() {
-	cmd.Execute(currentVersion)
+	cmd.Execute(VERSION)
 }
