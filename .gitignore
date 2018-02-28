@@ -15,3 +15,6 @@
 
 # Exclude build output folder
 build/
+
+# Exclude vendor files
+vendor/
