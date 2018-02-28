@@ -10,7 +10,9 @@ import (
 )
 
 var (
-	cfgFile string
+	cfgFile     string
+	projectBase string
+	userLicense string
 	// VERSION would be provded at build
 	VERSION string
 )
@@ -43,6 +45,7 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.boom.yaml)")
+	rootCmd.PersistentFlags().Bool("viper", true, "Use Viper for configuration")
 
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
