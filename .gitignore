@@ -18,3 +18,6 @@ build/
 
 # Exclude vendor files
 vendor/
+
+# Binaries
+boom
