@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 	"os/exec"
 
 	"github.com/samirprakash/boom/helpers"
@@ -31,8 +30,8 @@ var buildCmd = &cobra.Command{
 
 			helpers.PrintCommand(cmd)
 			output, err := cmd.CombinedOutput()
-			printError(err)
-			printOutput(output)
+			helpers.PrintError(err)
+			helpers.PrintOutput(output)
 		}
 	},
 }
@@ -42,16 +41,4 @@ func init() {
 	buildCmd.Flags().BoolVarP(&maven, "maven", "m", false, "I build your code with maven")
 	buildCmd.Flags().BoolVarP(&gradle, "gradle", "g", false, "I build your code with gradle")
 	buildCmd.Flags().BoolVarP(&npm, "npm", "n", false, "I build your code with node package manager")
-}
-
-func printError(err error) {
-	if err != nil {
-		os.Stderr.WriteString(fmt.Sprintf("==> Error : %s\n", err.Error()))
-	}
-}
-
-func printOutput(outs []byte) {
-	if len(outs) > 0 {
-		fmt.Printf("==> Output : %s\n", string(outs))
-	}
 }
