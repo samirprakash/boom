@@ -39,6 +39,13 @@ var buildCmd = &cobra.Command{
 			output, err := cmd.CombinedOutput()
 			helpers.PrintError(err)
 			helpers.PrintOutput(output)
+		} else if npm {
+			cmd := exec.Command("npm", "install")
+
+			helpers.PrintCommand(cmd)
+			output, err := cmd.CombinedOutput()
+			helpers.PrintError(err)
+			helpers.PrintOutput(output)
 		}
 	},
 }
