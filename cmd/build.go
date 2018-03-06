@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
-	"strings"
 
+	"github.com/samirprakash/boom/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -29,7 +29,7 @@ var buildCmd = &cobra.Command{
 		if maven {
 			cmd := exec.Command("mvn", "clean", "package")
 
-			printCommand(cmd)
+			helpers.PrintCommand(cmd)
 			output, err := cmd.CombinedOutput()
 			printError(err)
 			printOutput(output)
@@ -42,10 +42,6 @@ func init() {
 	buildCmd.Flags().BoolVarP(&maven, "maven", "m", false, "I build your code with maven")
 	buildCmd.Flags().BoolVarP(&gradle, "gradle", "g", false, "I build your code with gradle")
 	buildCmd.Flags().BoolVarP(&npm, "npm", "n", false, "I build your code with node package manager")
-}
-
-func printCommand(cmd *exec.Cmd) {
-	fmt.Printf("==> Executing %s\n", strings.Join(cmd.Args, " "))
 }
 
 func printError(err error) {
