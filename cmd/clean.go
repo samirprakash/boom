@@ -17,9 +17,9 @@ var cleanCmd = &cobra.Command{
 }
 
 func cleanRepo() {
-	command := exec.Command("mvn", "clean")
-	helpers.PrintCommand(command)
-	output, err := command.CombinedOutput()
+	cmd := exec.Command("mvn", "clean")
+	helpers.PrintCommand(cmd)
+	output, err := cmd.CombinedOutput()
 	helpers.PrintError(err)
 	helpers.PrintOutput(output)
 }
