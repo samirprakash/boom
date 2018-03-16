@@ -51,7 +51,7 @@ var buildCmd = &cobra.Command{
 }
 
 func init() {
-	rootCmd.AddCommand(buildCmd)
+	// rootCmd.AddCommand(buildCmd)
 	buildCmd.Flags().BoolVarP(&maven, "maven", "m", false, "I build your code with maven")
 	buildCmd.Flags().BoolVarP(&gradle, "gradle", "g", false, "I build your code with gradle")
 	buildCmd.Flags().BoolVarP(&npm, "npm", "n", false, "I build your code with node package manager")
