@@ -12,14 +12,14 @@ var mavenCmd = &cobra.Command{
 	Short: "Build with maven",
 	Long: `This is the base command for running builds with maven dependency management:
 
-- Clean, build, test, package and generate sonar reports
-- Clean your workspace
-- Build your workspace
-- Test your workspace
-- Generate sonar repots`,
-	RunE: func(cmd *cobra.Command, args []string) error {
+				- Clean, build, test, package and generate sonar reports
+				- Clean your workspace
+				- Build your workspace
+				- Test your workspace
+				- Generate sonar repots`,
+	Args: cobra.MinimumNArgs(1),
+	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("maven called")
-		return nil
 	},
 }
 
