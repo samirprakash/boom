@@ -6,7 +6,9 @@ import (
 	"github.com/briandowns/spinner"
 )
 
-//StartSpinner returns spinner reference
+// StartSpinner represents the logic for creating a new spinner with a custom message
+// Finally, it returns back a pointer to spinner to be used from the calling func
+// The return value would be used to stop the spinner once the actualt command execution has completed
 func StartSpinner(msg string) *spinner.Spinner {
 	s := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
 	s.Prefix = msg

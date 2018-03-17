@@ -20,13 +20,11 @@ var cleanCmd = &cobra.Command{
 }
 
 // cleanWorkingDir would execute "mvn clean" command,
-// generate error/success output and
-// print it on console for the end user
+// generate error/success output and print it on console for the end user
 func cleanWorkingDir() {
 	msg := "Cleaning up your build directory ... "
 
 	// Spinner with custom message to display execution progress
-	// An output is geneated at the end of execution
 	s := helpers.StartSpinner(msg)
 
 	cmd := exec.Command("mvn", "clean")
