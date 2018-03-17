@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os/exec"
 
-	"github.com/samirprakash/boom/helpers"
+	"github.com/samirprakash/go-boom/helpers"
 	"github.com/spf13/cobra"
 )
 

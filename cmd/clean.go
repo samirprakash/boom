@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/briandowns/spinner"
-	"github.com/samirprakash/boom/helpers"
+	"github.com/samirprakash/go-boom/helpers"
 	"github.com/spf13/cobra"
 )
 
