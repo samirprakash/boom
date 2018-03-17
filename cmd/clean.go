@@ -17,13 +17,17 @@ var cleanCmd = &cobra.Command{
 }
 
 func cleanRepo() {
-	s := helpers.StartSpinner("Cleaning up your build directory ... ")
+	msg := "Cleaning up your build directory ... "
+	s := helpers.StartSpinner(msg)
+
 	cmd := exec.Command("mvn", "clean")
+
 	helpers.PrintCommand(cmd)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		helpers.PrintError(err)
 	}
+
 	s.Stop()
 	helpers.PrintOutput(output)
 }

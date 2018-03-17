@@ -7,9 +7,9 @@ import (
 )
 
 //StartSpinner returns spinner reference
-func StartSpinner(m string) *spinner.Spinner {
+func StartSpinner(msg string) *spinner.Spinner {
 	s := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
-	s.Prefix = "Cleaning up your build directory ... "
+	s.Prefix = msg
 	s.Color("green")
 	s.Start()
 

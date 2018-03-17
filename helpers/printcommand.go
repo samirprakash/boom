@@ -8,5 +8,5 @@ import (
 
 // PrintCommand Export option to print commands
 func PrintCommand(cmd *exec.Cmd) {
-	fmt.Printf("==> Executed %s\n", strings.Join(cmd.Args, " "))
+	fmt.Printf("==> Executing %s\n", strings.Join(cmd.Args, " "))
 }
