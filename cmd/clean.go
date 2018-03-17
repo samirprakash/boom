@@ -2,9 +2,7 @@ package cmd
 
 import (
 	"os/exec"
-	"time"
 
-	"github.com/briandowns/spinner"
 	"github.com/samirprakash/go-boom/helpers"
 	"github.com/spf13/cobra"
 )
@@ -19,17 +17,14 @@ var cleanCmd = &cobra.Command{
 }
 
 func cleanRepo() {
-	s := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
-	s.Prefix = "Cleaning up your build directory ... "
-	s.Color("green")
-	s.Start()
-
+	s := helpers.StartSpinner("Cleaning up your build directory ... ")
 	cmd := exec.Command("mvn", "clean")
-	output, err := cmd.CombinedOutput()
-	s.Stop()
-
 	helpers.PrintCommand(cmd)
-	helpers.PrintError(err)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		helpers.PrintError(err)
+	}
+	s.Stop()
 	helpers.PrintOutput(output)
 }
 
