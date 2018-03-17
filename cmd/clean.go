@@ -3,7 +3,7 @@ package cmd
 import (
 	"os/exec"
 
-	"github.com/samirprakash/go-boom/helpers"
+	"github.com/samirprakash/go-boom/helper"
 	"github.com/spf13/cobra"
 )
 
@@ -25,18 +25,18 @@ func cleanWorkingDir() {
 	msg := "Cleaning up your build directory ... "
 
 	// Spinner with custom message to display execution progress
-	s := helpers.StartSpinner(msg)
+	s := helper.StartSpinner(msg)
 
 	cmd := exec.Command("mvn", "clean")
-	helpers.PrintCommand(cmd)
+	helper.PrintCommand(cmd)
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		helpers.PrintError(err)
+		helper.PrintError(err)
 	}
 
 	s.Stop()
-	helpers.PrintOutput(output)
+	helper.PrintOutput(output)
 }
 
 func init() {

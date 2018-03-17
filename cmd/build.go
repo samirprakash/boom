@@ -2,9 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"os/exec"
 
-	"github.com/samirprakash/go-boom/helpers"
 	"github.com/spf13/cobra"
 )
 
@@ -25,28 +23,28 @@ var buildCmd = &cobra.Command{
 		fmt.Printf("Gradle is %v\n", gradle)
 		fmt.Printf("npm is %v\n", npm)
 
-		if maven {
-			cmd := exec.Command("mvn", "clean", "package")
+		// if maven {
+		// 	cmd := exec.Command("mvn", "clean", "package")
 
-			helpers.PrintCommand(cmd)
-			output, err := cmd.CombinedOutput()
-			helpers.PrintError(err)
-			helpers.PrintOutput(output)
-		} else if gradle {
-			cmd := exec.Command("gradle", "clean", "build")
+		// 	helpers.PrintCommand(cmd)
+		// 	output, err := cmd.CombinedOutput()
+		// 	helpers.PrintError(err)
+		// 	helpers.PrintOutput(output)
+		// } else if gradle {
+		// 	cmd := exec.Command("gradle", "clean", "build")
 
-			helpers.PrintCommand(cmd)
-			output, err := cmd.CombinedOutput()
-			helpers.PrintError(err)
-			helpers.PrintOutput(output)
-		} else if npm {
-			cmd := exec.Command("npm", "install")
+		// 	helpers.PrintCommand(cmd)
+		// 	output, err := cmd.CombinedOutput()
+		// 	helpers.PrintError(err)
+		// 	helpers.PrintOutput(output)
+		// } else if npm {
+		// 	cmd := exec.Command("npm", "install")
 
-			helpers.PrintCommand(cmd)
-			output, err := cmd.CombinedOutput()
-			helpers.PrintError(err)
-			helpers.PrintOutput(output)
-		}
+		// 	helpers.PrintCommand(cmd)
+		// 	output, err := cmd.CombinedOutput()
+		// 	helpers.PrintError(err)
+		// 	helpers.PrintOutput(output)
+		// }
 	},
 }
 
