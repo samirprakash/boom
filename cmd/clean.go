@@ -20,14 +20,15 @@ var cleanCmd = &cobra.Command{
 
 func cleanRepo() {
 	s := spinner.New(spinner.CharSets[35], 100*time.Millisecond)
-	s.Prefix = "Chrurning up the cogs ... "
+	s.Prefix = "Cleaning up your build directory ... "
 	s.Color("green")
 	s.Start()
 
 	cmd := exec.Command("mvn", "clean")
-	helpers.PrintCommand(cmd)
 	output, err := cmd.CombinedOutput()
 	s.Stop()
+
+	helpers.PrintCommand(cmd)
 	helpers.PrintError(err)
 	helpers.PrintOutput(output)
 }
