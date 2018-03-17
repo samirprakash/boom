@@ -1,26 +1,21 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/spf13/cobra"
 )
 
-// mavenCmd represents the maven command
+// mavenCmd represents the root command to execute CLI tasks with maven dependencies
 var mavenCmd = &cobra.Command{
 	Use:   "maven",
-	Short: "Build with maven",
+	Short: "Run builds with maven",
 	Long: `This is the base command for running builds with maven dependency management:
 
-				- Clean, build, test, package and generate sonar reports
-				- Clean your workspace
-				- Build your workspace
-				- Test your workspace
-				- Generate sonar repots`,
+- Clean, build, test, package and generate sonar reports
+- Clean your workspace
+- Build your workspace
+- Test your workspace
+- Generate sonar repots`,
 	Args: cobra.MinimumNArgs(1),
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("maven called")
-	},
 }
 
 func init() {
