@@ -7,7 +7,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// testCmd represents the test command
+// testCmd represents the "mvn test" command
+// If executed from the root location of pom.xml,
+// it would execute the unit tests and integration tests, if any
+// providing an output of the test execution on the console
 var testCmd = &cobra.Command{
 	Use:   "test",
 	Short: "Run your unit tests with maven",
