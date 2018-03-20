@@ -4,6 +4,7 @@ import (
 	"os/exec"
 
 	"github.com/samirprakash/go-boom/helper"
+	"github.com/samirprakash/go-boom/helper/print"
 	"github.com/spf13/cobra"
 )
 
@@ -26,15 +27,15 @@ func runUnitTests() {
 	s := helper.StartSpinner(msg)
 
 	cmd := exec.Command("mvn", "test")
-	helper.PrintCommand(cmd)
+	print.Command(cmd)
 
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		helper.PrintError(err)
+		print.Error(err)
 	}
 
 	s.Stop()
-	helper.PrintOutput(output)
+	print.Output(output)
 }
 
 func init() {
