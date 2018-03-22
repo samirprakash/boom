@@ -11,6 +11,26 @@ import (
 )
 
 var (
+	buildCmd = &cobra.Command{
+		Use:   "build",
+		Short: "One command to build it all - clean, test, package, generate and upload sonar/coverage reports",
+		Run: func(cmd *cobra.Command, args []string) {
+			msg := "Cleaning, running tests, pakcaging and uploading reports ... "
+			// Spinner with custom message to display execution progress
+			s := helper.StartSpinner(msg)
+			c := exec.Command("mvn", "validate", "compile", "clean", "org.jacoco:jacoco-maven-plugin:prepare-agent", "test", "package", "-DskipTests", "sonar:sonar")
+			fmt.Printf("==> Executing %s\n", strings.Join(c.Args, " "))
+			output, err := c.CombinedOutput()
+			if err != nil {
+				os.Stderr.WriteString(fmt.Sprintf("\n==> Error : %s\n", err.Error()))
+			}
+			s.Stop()
+			if len(output) > 0 {
+				fmt.Printf("==> Output : \n%s\n", string(output))
+			}
+		},
+	}
+
 	setupCmd = &cobra.Command{
 		Use:   "setup",
 		Short: "Performs a validation and compilation of the workspace",
@@ -141,6 +161,7 @@ var mavenCmd = &cobra.Command{
 func init() {
 	rootCmd.AddCommand(mavenCmd)
 
+	mavenCmd.AddCommand(buildCmd)
 	mavenCmd.AddCommand(setupCmd)
 	mavenCmd.AddCommand(cleanCmd)
 	mavenCmd.AddCommand(testCmd)
