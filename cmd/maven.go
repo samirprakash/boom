@@ -46,6 +46,12 @@ var (
 		Short: "Executes unit tests facilitated with code coverage",
 		Run: func(cmd *cobra.Command, args []string) {
 			c := "mvn org.jacoco:jacoco-maven-plugin:prepare-agent test"
+			switch {
+			case runIntegrationTests:
+				c += " -Dcategories=integration-tests"
+			case runUnitTests:
+				c += " -Dcategories=unit-tests"
+			}
 			execute(c)
 		},
 	}
@@ -83,12 +89,5 @@ func init() {
 	testCmd.Flags().BoolVarP(&runUnitTests, "unit-tests", "u", false, "maven test [ --unit-tests | -u ]")
 
 	rootCmd.AddCommand(mavenCmd)
-
-	mavenCmd.AddCommand(buildCmd)
-	mavenCmd.AddCommand(validateCmd)
-	mavenCmd.AddCommand(cleanCmd)
-	mavenCmd.AddCommand(testCmd)
-	mavenCmd.AddCommand(verifyCmd)
-	mavenCmd.AddCommand(packageCmd)
-	mavenCmd.AddCommand(deployCmd)
+	mavenCmd.AddCommand(buildCmd, validateCmd, cleanCmd, testCmd, verifyCmd, packageCmd, deployCmd)
 }
