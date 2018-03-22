@@ -143,7 +143,7 @@ var (
 			msg := "Deploying generated packages to artifactory ... "
 			// Spinner with custom message to display execution progress
 			s := helper.StartSpinner(msg)
-			c := exec.Command("mvn", "deploy", "-DrepositoryId=tc-central-repository")
+			c := exec.Command("mvn", "deploy")
 			fmt.Printf("==> Executing %s\n", strings.Join(c.Args, " "))
 			output, err := c.CombinedOutput()
 			if err != nil {
