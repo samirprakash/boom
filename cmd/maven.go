@@ -11,9 +11,15 @@ import (
 )
 
 var (
+	mavenCmd = &cobra.Command{
+		Use:   "maven",
+		Short: "Run builds with maven",
+		Args:  cobra.MinimumNArgs(1),
+	}
+
 	buildCmd = &cobra.Command{
 		Use:   "build",
-		Short: "One command to build it all - clean, test, package, generate and upload sonar/coverage reports",
+		Short: "All in One - Validate, Compile, Clean, Test, Package, Code Coverage and Sonar",
 		Run: func(cmd *cobra.Command, args []string) {
 			msg := "Cleaning, running tests, pakcaging and uploading reports ... "
 			// Spinner with custom message to display execution progress
@@ -31,9 +37,9 @@ var (
 		},
 	}
 
-	setupCmd = &cobra.Command{
-		Use:   "setup",
-		Short: "Performs a validation and compilation of the workspace",
+	validateCmd = &cobra.Command{
+		Use:   "validate",
+		Short: "Performs a validation and checks for compilation issues",
 		Run: func(cmd *cobra.Command, args []string) {
 			msg := "Performing a validation and checking for compilation issues ... "
 			// Spinner with custom message to display execution progress
@@ -53,7 +59,7 @@ var (
 
 	cleanCmd = &cobra.Command{
 		Use:   "clean",
-		Short: "Clean up your workspace",
+		Short: "Cleans up your workspace",
 		Run: func(cmd *cobra.Command, args []string) {
 			msg := "Cleaning up your build directory ... "
 			// Spinner with custom message to display execution progress
@@ -73,7 +79,7 @@ var (
 
 	testCmd = &cobra.Command{
 		Use:   "test",
-		Short: "Execute unit tests facilitated with code coverage",
+		Short: "Executes unit tests facilitated with code coverage",
 		Run: func(cmd *cobra.Command, args []string) {
 			msg := "Executing unit tests with code coverage ... "
 			// Spinner with custom message to display execution progress
@@ -93,7 +99,7 @@ var (
 
 	packageCmd = &cobra.Command{
 		Use:   "package",
-		Short: "Package your compiled code in a distributable format",
+		Short: "Packages your compiled code in a distributable format",
 		Run: func(cmd *cobra.Command, args []string) {
 			msg := "Skipping unit tests and packaging compiled code to an executable JAR ... "
 			s := helper.StartSpinner(msg)
@@ -112,7 +118,7 @@ var (
 
 	verifyCmd = &cobra.Command{
 		Use:   "verify",
-		Short: "Run quality checks on integration test results",
+		Short: "Runs quality checks on integration test results",
 		Run: func(cmd *cobra.Command, args []string) {
 			msg := "Verifying quality checks on integration test results ... "
 			// Spinner with custom message to display execution progress
@@ -132,7 +138,7 @@ var (
 
 	deployCmd = &cobra.Command{
 		Use:   "deploy",
-		Short: "Copy your generated package to artifactory",
+		Short: "Copies generated package to artifactory",
 		Run: func(cmd *cobra.Command, args []string) {
 			msg := "Deploying generated packages to artifactory ... "
 			// Spinner with custom message to display execution progress
@@ -151,18 +157,11 @@ var (
 	}
 )
 
-// mavenCmd represents the root command to execute CLI tasks with maven dependencies
-var mavenCmd = &cobra.Command{
-	Use:   "maven",
-	Short: "Run builds with maven",
-	Args:  cobra.MinimumNArgs(1),
-}
-
 func init() {
 	rootCmd.AddCommand(mavenCmd)
 
 	mavenCmd.AddCommand(buildCmd)
-	mavenCmd.AddCommand(setupCmd)
+	mavenCmd.AddCommand(validateCmd)
 	mavenCmd.AddCommand(cleanCmd)
 	mavenCmd.AddCommand(testCmd)
 	mavenCmd.AddCommand(verifyCmd)
