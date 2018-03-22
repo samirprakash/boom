@@ -11,6 +11,9 @@ import (
 )
 
 var (
+	runIntegrationTests bool
+	runUnitTests        bool
+
 	mavenCmd = &cobra.Command{
 		Use:   "maven",
 		Short: "Run builds with maven",
@@ -158,6 +161,9 @@ var (
 )
 
 func init() {
+	testCmd.Flags().BoolVarP(&runIntegrationTests, "integration-tests", "i", false, "maven test [ --integration-tests | -i ]")
+	testCmd.Flags().BoolVarP(&runUnitTests, "unit-tests", "u", false, "maven test [ --unit-tests | -u ]")
+
 	rootCmd.AddCommand(mavenCmd)
 
 	mavenCmd.AddCommand(buildCmd)
