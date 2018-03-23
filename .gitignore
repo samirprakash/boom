@@ -21,3 +21,7 @@ vendor/
 
 # Binaries
 boom
+go-boom
+
+# System files
+.DS_Store
