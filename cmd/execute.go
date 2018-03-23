@@ -6,6 +6,9 @@ import (
 	"strings"
 )
 
+// execute is a generic implementation to execute the commands that are provided
+// it tokenizes the incoming string command to generate executable commands
+// and spits the output to the console
 func execute(c string) {
 	tokens := strings.Fields(c)
 	executable := tokens[0]
