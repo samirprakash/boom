@@ -63,7 +63,7 @@ func checkURLStatus(url string) error {
 		return fmt.Errorf("unable to make request: %s", err)
 	}
 
-	return retry(10, time.Second*5, func() error {
+	return retry(60, time.Second*3, func() error {
 		// execute the request
 		resp, err := http.DefaultClient.Do(req)
 		fmt.Println("Atrempting to connect to : ", url)
