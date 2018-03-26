@@ -39,23 +39,24 @@ Example usage options:
 	// execute go-boom docker build -h to check the available options
 	builderCmd = &cobra.Command{
 		Use:     "build",
-		Short:   "Build docker images for packaing your code base",
+		Short:   "Build docker images and push to a remote repository",
 		Example: "go-boom docker build [ --image-tag | -i ] [[ --app-type | -t ] -h",
 		Run: func(cmd *cobra.Command, args []string) {
 			if uploadPath == "" {
-				fmt.Fprintln(os.Stderr, "Missing data - please provide the path to your docker registry. \n\nRun `go-boom docker build -h` for usage guidelines!")
+				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the path to your docker registry. \nRun `go-boom docker build -h` for usage guidelines!")
 				return
 			} else if imageTag == "" {
-				fmt.Fprintln(os.Stderr, "Missing data - please provide the image tag. \n\nRun `go-boom docker build -h` for usage guidelines!")
+				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the image tag. \nRun `go-boom docker build -h` for usage guidelines!")
 				return
 			} else if appType == "" {
-				fmt.Fprintln(os.Stderr, "Missing data - please provide the application type. \n\nRun `go-boom docker build -h` for usage guidelines!")
+				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the application type. \nRun `go-boom docker build -h` for usage guidelines!")
 				return
 			}
 			tag := uploadPath + "/" + appType + "/" + imageTag
-			c := "docker build --tag " + tag + " . && docker push " + tag
-			fmt.Println(c)
-			execute(c)
+			buildImage := "docker build --tag " + tag + " ."
+			pushImage := "docker push " + tag
+			execute(buildImage)
+			execute(pushImage)
 		},
 	}
 )
