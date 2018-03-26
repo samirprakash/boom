@@ -40,18 +40,19 @@ func retry(attempts int, sleep time.Duration, f func() error) error {
 
 // healthcheck is called from docker compose command with a comma seperated string of exposed health check ports
 // which are used to generate a well formed URL and sent to checkURLStatus() to verify if the URL is accessible or not
-func healthcheck(healthcheckPorts string) error {
+func healthcheck(healthcheckPorts string) {
 	ports := strings.Split(healthcheckPorts, ",")
 	for i := range ports {
 		// generate the URL
 		url := "http://localhost:" + ports[i] + "/health"
+
 		// check URL status - 5XX, 4XX, 200 Ok
 		err := checkURLStatus(url)
 		if err != nil {
-			return fmt.Errorf("not able to checl the status for %v", url)
+			fmt.Printf("not able to checl the status for %v", url)
+			break
 		}
 	}
-	return nil
 }
 
 func checkURLStatus(url string) error {

@@ -76,15 +76,24 @@ Example usage options:
 				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the healthcheck ports exposed in the docker compose file. \nRun `go-boom docker compose -h` for usage guidelines!")
 				return
 			}
-			cloneConfig := "git clone git@github.com:toyota-connected/pg-config-source.git " + os.Getenv("TC_CONFIG_PATH")
-			setupEnvironment := "docker-compose -f " + composeFile + " up --build --detach --remove-orphans"
 
-			execute(cloneConfig)
-			execute(setupEnvironment)
-			err := healthcheck(healthcheckPorts)
-			if err != nil {
-				fmt.Println(err)
+			// clone config source repo if not already present on the build environment
+			// ensure that TC_CONFIG_PATH has been set up as an environment variable
+			path := os.Getenv("TC_CONFIG_PATH")
+			repo, _ := exists(path)
+			if !repo {
+				fmt.Println("cloning into : ", path)
+				cloneConfig := "git clone git@github.com:toyota-connected/pg-config-source.git " + path
+				execute(cloneConfig)
 			}
+			fmt.Println("repository that is being cloned already exists on the build environment")
+
+			// setup docker compose environment based on the specified docker compose file
+			setupEnvironment := "docker-compose -f " + composeFile + " up --build --detach --remove-orphans"
+			execute(setupEnvironment)
+
+			// check if the docker containers are healthy or not based on the ports that have been exposed from docker-compose.yaml
+			healthcheck(healthcheckPorts)
 		},
 	}
 )
