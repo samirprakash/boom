@@ -79,15 +79,12 @@ Example usage options:
 			cloneConfig := "git clone git@github.com:toyota-connected/pg-config-source.git " + os.Getenv("TC_CONFIG_PATH")
 			setupEnvironment := "docker-compose -f " + composeFile + " up --build --detach --remove-orphans"
 
-			fmt.Println(cloneConfig)
-			// execute(cloneConfig)
-			fmt.Println(setupEnvironment)
+			execute(cloneConfig)
 			execute(setupEnvironment)
-			healthcheck(healthcheckPorts)
-			// buildImage := "docker build --tag " + tag + " ."
-			// pushImage := "docker push " + tag
-			// execute(buildImage)
-			// execute(pushImage)
+			err := healthcheck(healthcheckPorts)
+			if err != nil {
+				fmt.Println(err)
+			}
 		},
 	}
 )
