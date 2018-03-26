@@ -35,9 +35,9 @@ Example usage options:
 		Args: cobra.MinimumNArgs(1),
 	}
 
-	// buildCmd is the subcommand to generate docker images
+	// imageCmd is the subcommand to generate docker images
 	// execute go-boom docker build -h to check the available options
-	builderCmd = &cobra.Command{
+	imageCmd = &cobra.Command{
 		Use:     "build",
 		Short:   "Build docker images and push to a remote repository",
 		Example: "go-boom docker build [ --image-tag | -i ] [[ --app-type | -t ] -h",
@@ -62,10 +62,10 @@ Example usage options:
 )
 
 func init() {
-	builderCmd.Flags().StringVarP(&uploadPath, "upload-to", "u", "", "specify the url to your docker registry")
-	builderCmd.Flags().StringVarP(&imageTag, "image-tag", "i", "", "specify the tag for your image")
-	builderCmd.Flags().StringVarP(&appType, "app-type", "t", "", "specifcy the application type - services/client")
+	imageCmd.Flags().StringVarP(&uploadPath, "upload-to", "u", "", "specify the url to your docker registry")
+	imageCmd.Flags().StringVarP(&imageTag, "image-tag", "i", "", "specify the tag for your image")
+	imageCmd.Flags().StringVarP(&appType, "app-type", "t", "", "specifcy the application type - services/client")
 
 	rootCmd.AddCommand(dockerCmd)
-	dockerCmd.AddCommand(builderCmd)
+	dockerCmd.AddCommand(imageCmd)
 }
