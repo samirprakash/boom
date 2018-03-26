@@ -76,8 +76,14 @@ Example usage options:
 				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the healthcheck ports exposed in the docker compose file. \nRun `go-boom docker compose -h` for usage guidelines!")
 				return
 			}
-			fmt.Println(composeFile)
-			fmt.Println(healthcheckPorts)
+			cloneConfig := "git clone git@github.com:toyota-connected/pg-config-source.git " + os.Getenv("TC_CONFIG_PATH")
+			setupEnvironment := "docker-compose -f " + composeFile + " up --build --detach --remove-orphans"
+
+			fmt.Println(cloneConfig)
+			// execute(cloneConfig)
+			fmt.Println(setupEnvironment)
+			execute(setupEnvironment)
+			healthcheck(healthcheckPorts)
 			// buildImage := "docker build --tag " + tag + " ."
 			// pushImage := "docker push " + tag
 			// execute(buildImage)
