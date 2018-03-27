@@ -16,6 +16,8 @@ var (
 	networkBridge    string
 	testCollection   string
 	environmentSpec  string
+	currentImage     string
+	newImage         string
 
 	// dockerCmd is the parent command to execute docker and docker-compose actions
 	// execute go-boom docker -h to check the available options
@@ -124,9 +126,30 @@ Example usage options:
 			v := pwd + "/integration-tests:/etc/postman postman/newman_alpine33:3.8.3"
 			c := "/etc/postman/" + testCollection
 			e := "/etc/postman/" + environmentSpec
-			runNewmanTests := "docker run --network " + networkBridge + " -v " + v + " -c=" + c + " -e=" + e
-			fmt.Println(runNewmanTests)
-			execute(runNewmanTests)
+			runTests := "docker run --network " + networkBridge + " -v " + v + " -c=" + c + " -e=" + e
+			execute(runTests)
+		},
+	}
+
+	// tag is the subcommand to tag and push images created by `go-doom docker compose` command
+	// execute go-boom docker tag -h to check the available options
+	tagCmd = &cobra.Command{
+		Use:     "tag",
+		Short:   "tag and push images to docker registry",
+		Example: "go-boom docker tag [ --current-image | -i ] [ --new-image | -n ] -h",
+		Run: func(cmd *cobra.Command, args []string) {
+			if currentImage == "" {
+				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the current image tag. \nRun `go-boom docker tag -h` for usage guidelines!")
+				return
+			} else if newImage == "" {
+				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the new image tag. \nRun `go-boom docker tag -h` for usage guidelines!")
+				return
+			}
+
+			c := "docker tag " + currentImage + " " + newImage
+			execute(c)
+			c = "docker push " + newImage
+			execute(c)
 		},
 	}
 )
@@ -143,8 +166,12 @@ func init() {
 	runCmd.Flags().StringVarP(&testCollection, "test-collection", "c", "", "specify the test collection file name in your integration-tests folder")
 	runCmd.Flags().StringVarP(&environmentSpec, "environment-file", "e", "", "specify the newman environment file name in your integration-tests folder")
 
+	tagCmd.Flags().StringVarP(&currentImage, "current-image", "i", "", "specify the tag of existing docker image")
+	tagCmd.Flags().StringVarP(&newImage, "new-image", "n", "", "specify the tag name to tag the existing image with")
+
 	rootCmd.AddCommand(dockerCmd)
 	dockerCmd.AddCommand(imageCmd)
 	dockerCmd.AddCommand(composeCmd)
 	dockerCmd.AddCommand(runCmd)
+	dockerCmd.AddCommand(tagCmd)
 }
