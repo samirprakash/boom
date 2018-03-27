@@ -13,6 +13,9 @@ var (
 	uploadPath       string
 	composeFile      string
 	healthcheckPorts string
+	networkBridge    string
+	testCollection   string
+	environmentSpec  string
 
 	// dockerCmd is the parent command to execute docker and docker-compose actions
 	// execute go-boom docker -h to check the available options
@@ -31,7 +34,7 @@ Example usage options:
 	- go-boom docker [ build | compose | run | tag ] -h
 	- go-boom docker build [ --image-tag | -i ] [ --app-type | -t ] -h
 	- go-boom docker compose [ --compose-file | -f ] -h
-	- go-boom docker run [ --network-bridge | -n ] [ --integration-test-file | -f ] [ --environment-file | -e ] -h
+	- go-boom docker run [ --network-bridge | -n ] [ --test-collection | -c ] [ --environment-spec | -e ] -h
 	- go-boom docker tag [ --current-image | -i ] [ --new-image | -n ] -h
 		`,
 		Args: cobra.MinimumNArgs(1),
@@ -77,8 +80,7 @@ Example usage options:
 				return
 			}
 
-			// clone config source repo if not already present on the build environment
-			// ensure that TC_CONFIG_PATH has been set up as an environment variable
+			// clone config source repo if not already present in the build environment
 			path := os.Getenv("TC_CONFIG_PATH")
 			repo, _ := exists(path)
 			if !repo {
@@ -96,16 +98,53 @@ Example usage options:
 			healthcheck(healthcheckPorts)
 		},
 	}
+
+	// run is the subcommand to execute tests collection on an existing docker compose environment
+	// this should be executed after `go-boom docker compose` has been executed successfully
+	// execute go-boom docker run -h to check the available options
+	runCmd = &cobra.Command{
+		Use:     "run",
+		Short:   "run collection of tests using newman command line runner",
+		Example: "go-boom docker run [ --network-bridge | -n ] [ --test-collection | -c ] [ --environment-spec | -e ] -h",
+		Run: func(cmd *cobra.Command, args []string) {
+			if networkBridge == "" {
+				fmt.Fprintln(os.Stderr, "\nMissing data - please provide network bridge name. \nRun `docker network ls` to get a list of existing network bridges!")
+				fmt.Fprintln(os.Stderr, "\nIf network bridge does not exist then execute `go-boom docker compose` before running this command!")
+				fmt.Fprintln(os.Stderr, "\nRun `go-boom docker run -h` for usage guidelines!")
+				return
+			} else if testCollection == "" {
+				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the JSON file name for your test collection. \nRun `go-boom docker run -h` for usage guidelines!")
+				return
+			} else if environmentSpec == "" {
+				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the JSON file defining your execution environment. \nRun `go-boom docker run -h` for usage guidelines!")
+				return
+			}
+
+			pwd, _ := os.Getwd()
+			v := pwd + "/integration-tests:/etc/postman postman/newman_alpine33:3.8.3"
+			c := "/etc/postman/" + testCollection
+			e := "/etc/postman/" + environmentSpec
+			runNewmanTests := "docker run --network " + networkBridge + " -v " + v + " -c=" + c + " -e=" + e
+			fmt.Println(runNewmanTests)
+			execute(runNewmanTests)
+		},
+	}
 )
 
 func init() {
 	imageCmd.Flags().StringVarP(&uploadPath, "upload-to", "u", "", "specify the url to your docker registry")
 	imageCmd.Flags().StringVarP(&imageTag, "image-tag", "i", "", "specify the tag for your image")
 	imageCmd.Flags().StringVarP(&appType, "app-type", "t", "", "specifcy the application type - services/client")
+
 	composeCmd.Flags().StringVarP(&composeFile, "compose-file", "f", "", "specify the compose file to used for setting up the environment")
 	composeCmd.Flags().StringVarP(&healthcheckPorts, "healthcheck-ports", "p", "", "specify the healthcheck ports exposed in the compose file - use comma seperated format")
+
+	runCmd.Flags().StringVarP(&networkBridge, "network-bridge", "n", "", "specify the network briidge applicable for running these tests")
+	runCmd.Flags().StringVarP(&testCollection, "test-collection", "c", "", "specify the test collection file name in your integration-tests folder")
+	runCmd.Flags().StringVarP(&environmentSpec, "environment-file", "e", "", "specify the newman environment file name in your integration-tests folder")
 
 	rootCmd.AddCommand(dockerCmd)
 	dockerCmd.AddCommand(imageCmd)
 	dockerCmd.AddCommand(composeCmd)
+	dockerCmd.AddCommand(runCmd)
 }
