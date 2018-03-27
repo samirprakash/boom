@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/samirprakash/go-boom/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -62,8 +63,8 @@ Example usage options:
 			tag := uploadPath + "/" + appType + "/" + imageTag
 			buildImage := "docker build --tag " + tag + " ."
 			pushImage := "docker push " + tag
-			execute(buildImage)
-			execute(pushImage)
+			utils.Execute(buildImage)
+			utils.Execute(pushImage)
 		},
 	}
 
@@ -84,20 +85,20 @@ Example usage options:
 
 			// clone config source repo if not already present in the build environment
 			path := os.Getenv("TC_CONFIG_PATH")
-			repo, _ := exists(path)
+			repo, _ := utils.Exists(path)
 			if !repo {
 				fmt.Println("cloning into : ", path)
 				cloneConfig := "git clone git@github.com:toyota-connected/pg-config-source.git " + path
-				execute(cloneConfig)
+				utils.Execute(cloneConfig)
 			}
 			fmt.Println("repository that is being cloned already exists on the build environment")
 
 			// setup docker compose environment based on the specified docker compose file
 			setupEnvironment := "docker-compose -f " + composeFile + " up --build --detach --remove-orphans"
-			execute(setupEnvironment)
+			utils.Execute(setupEnvironment)
 
 			// check if the docker containers are healthy or not based on the ports that have been exposed from docker-compose.yaml
-			healthcheck(healthcheckPorts)
+			utils.Healthcheck(healthcheckPorts)
 		},
 	}
 
@@ -127,7 +128,7 @@ Example usage options:
 			c := "/etc/postman/" + testCollection
 			e := "/etc/postman/" + environmentSpec
 			runTests := "docker run --network " + networkBridge + " -v " + v + " -c=" + c + " -e=" + e
-			execute(runTests)
+			utils.Execute(runTests)
 		},
 	}
 
@@ -147,14 +148,15 @@ Example usage options:
 			}
 
 			c := "docker tag " + currentImage + " " + newImage
-			execute(c)
+			utils.Execute(c)
 			c = "docker push " + newImage
-			execute(c)
+			utils.Execute(c)
 		},
 	}
 )
 
 func init() {
+	// Add flags to the sub commands to logical selection of options
 	imageCmd.Flags().StringVarP(&uploadPath, "upload-to", "u", "", "specify the url to your docker registry")
 	imageCmd.Flags().StringVarP(&imageTag, "image-tag", "i", "", "specify the tag for your image")
 	imageCmd.Flags().StringVarP(&appType, "app-type", "t", "", "specifcy the application type - services/client")

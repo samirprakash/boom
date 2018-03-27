@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/samirprakash/go-boom/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -48,7 +49,7 @@ Example usage options:
 		Example: "go-boom maven build -h",
 		Run: func(cmd *cobra.Command, args []string) {
 			c := "mvn validate compile clean org.jacoco:jacoco-maven-plugin:prepare-agent test package -DskipTests sonar:sonar"
-			execute(c)
+			utils.Execute(c)
 		},
 	}
 
@@ -60,7 +61,7 @@ Example usage options:
 		Example: "go-boom maven validate -h",
 		Run: func(cmd *cobra.Command, args []string) {
 			c := "mvn validate compile"
-			execute(c)
+			utils.Execute(c)
 		},
 	}
 
@@ -72,7 +73,7 @@ Example usage options:
 		Example: "go-boom maven clean -h",
 		Run: func(cmd *cobra.Command, args []string) {
 			c := "mvn clean"
-			execute(c)
+			utils.Execute(c)
 		},
 	}
 
@@ -92,7 +93,7 @@ Example usage options:
 			case runUnitTests:
 				c += " -Dcategories=unit-tests"
 			}
-			execute(c)
+			utils.Execute(c)
 		},
 	}
 
@@ -108,7 +109,7 @@ Example usage options:
 			if skipTests {
 				c += " -DskipTests"
 			}
-			execute(c)
+			utils.Execute(c)
 		},
 	}
 
@@ -120,7 +121,7 @@ Example usage options:
 		Example: "go-boom maven verify -h",
 		Run: func(cmd *cobra.Command, args []string) {
 			c := "mvn verify"
-			execute(c)
+			utils.Execute(c)
 		},
 	}
 
@@ -138,7 +139,7 @@ Example usage options:
 				return
 			}
 			c := "mvn deploy -DrepositoryId=" + repoID
-			execute(c)
+			utils.Execute(c)
 		},
 	}
 )
@@ -147,7 +148,9 @@ func init() {
 	// Add flags to the sub commands to logical selection of options
 	testCmd.Flags().BoolVarP(&runIntegrationTests, "integration-tests", "i", false, "Use this flag to execute integration tests")
 	testCmd.Flags().BoolVarP(&runUnitTests, "unit-tests", "u", false, "Use this flag to execute unit tests")
+
 	packageCmd.Flags().BoolVarP(&skipTests, "skip-tests", "s", false, "Use this flag to skip test while packaging")
+
 	deployCmd.Flags().StringVar(&repoID, "repository-id", "", "Provide this value to connect to the remote repository. Value must be from local .m2/settings.xml")
 
 	rootCmd.AddCommand(mavenCmd)
