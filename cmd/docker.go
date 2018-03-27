@@ -44,119 +44,39 @@ Example usage options:
 	}
 
 	// imageCmd is the subcommand to generate docker images
-	// execute go-boom docker build -h to check the available options
 	imageCmd = &cobra.Command{
 		Use:     "build",
 		Short:   "Build docker images and push to a remote repository",
 		Example: "go-boom docker build [ --image-tag | -i ] [ --app-type | -t ] -h",
-		Run: func(cmd *cobra.Command, args []string) {
-			if uploadPath == "" {
-				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the path to your docker registry. \nRun `go-boom docker build -h` for usage guidelines!")
-				return
-			} else if imageTag == "" {
-				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the image tag. \nRun `go-boom docker build -h` for usage guidelines!")
-				return
-			} else if appType == "" {
-				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the application type. \nRun `go-boom docker build -h` for usage guidelines!")
-				return
-			}
-			tag := uploadPath + "/" + appType + "/" + imageTag
-			buildImage := "docker build --tag " + tag + " ."
-			pushImage := "docker push " + tag
-			utils.Execute(buildImage)
-			utils.Execute(pushImage)
-		},
+		Run:     buildAndPush,
 	}
 
 	// compose is the subcommand to start a docker compose environment to integration testing
-	// execute go-boom docker compose -h to check the available options
 	composeCmd = &cobra.Command{
 		Use:     "compose",
 		Short:   "Create docker compose environment based on the docker-compose.yaml in the code base",
 		Example: "go-boom docker compose [ --compose-file | -f ] [ --healthcheck-ports | -p ] -h",
-		Run: func(cmd *cobra.Command, args []string) {
-			if composeFile == "" {
-				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the docker compose file. \nRun `go-boom docker compose -h` for usage guidelines!")
-				return
-			} else if healthcheckPorts == "" {
-				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the healthcheck ports exposed in the docker compose file. \nRun `go-boom docker compose -h` for usage guidelines!")
-				return
-			}
-
-			// clone config source repo if not already present in the build environment
-			path := os.Getenv("TC_CONFIG_PATH")
-			repo, _ := utils.Exists(path)
-			if !repo {
-				fmt.Println("cloning into : ", path)
-				cloneConfig := "git clone git@github.com:toyota-connected/pg-config-source.git " + path
-				utils.Execute(cloneConfig)
-			}
-			fmt.Println("repository that is being cloned already exists on the build environment")
-
-			// setup docker compose environment based on the specified docker compose file
-			setupEnvironment := "docker-compose -f " + composeFile + " up --build --detach --remove-orphans"
-			utils.Execute(setupEnvironment)
-
-			// check if the docker containers are healthy or not based on the ports that have been exposed from docker-compose.yaml
-			utils.Healthcheck(healthcheckPorts)
-		},
+		Run:     setupContainerEnvironment,
 	}
 
 	// run is the subcommand to execute tests collection on an existing docker compose environment
-	// this should be executed after `go-boom docker compose` has been executed successfully
-	// execute go-boom docker run -h to check the available options
 	runCmd = &cobra.Command{
 		Use:     "run",
 		Short:   "run collection of tests using newman command line runner",
 		Example: "go-boom docker run [ --network-bridge | -n ] [ --test-collection | -c ] [ --environment-spec | -e ] -h",
-		Run: func(cmd *cobra.Command, args []string) {
-			if networkBridge == "" {
-				fmt.Fprintln(os.Stderr, "\nMissing data - please provide network bridge name. \nRun `docker network ls` to get a list of existing network bridges!")
-				fmt.Fprintln(os.Stderr, "\nIf network bridge does not exist then execute `go-boom docker compose` before running this command!")
-				fmt.Fprintln(os.Stderr, "\nRun `go-boom docker run -h` for usage guidelines!")
-				return
-			} else if testCollection == "" {
-				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the JSON file name for your test collection. \nRun `go-boom docker run -h` for usage guidelines!")
-				return
-			} else if environmentSpec == "" {
-				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the JSON file defining your execution environment. \nRun `go-boom docker run -h` for usage guidelines!")
-				return
-			}
-
-			pwd, _ := os.Getwd()
-			v := pwd + "/integration-tests:/etc/postman postman/newman_alpine33:3.8.3"
-			c := "/etc/postman/" + testCollection
-			e := "/etc/postman/" + environmentSpec
-			runTests := "docker run --network " + networkBridge + " -v " + v + " -c=" + c + " -e=" + e
-			utils.Execute(runTests)
-		},
+		Run:     executeNewmanTests,
 	}
 
 	// tag is the subcommand to tag and push images created by `go-doom docker compose` command
-	// execute go-boom docker tag -h to check the available options
 	tagCmd = &cobra.Command{
 		Use:     "tag",
 		Short:   "tag and push images to docker registry",
 		Example: "go-boom docker tag [ --current-image | -i ] [ --new-image | -n ] -h",
-		Run: func(cmd *cobra.Command, args []string) {
-			if currentImage == "" {
-				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the current image tag. \nRun `go-boom docker tag -h` for usage guidelines!")
-				return
-			} else if newImage == "" {
-				fmt.Fprintln(os.Stderr, "\nMissing data - please provide the new image tag. \nRun `go-boom docker tag -h` for usage guidelines!")
-				return
-			}
-
-			c := "docker tag " + currentImage + " " + newImage
-			utils.Execute(c)
-			c = "docker push " + newImage
-			utils.Execute(c)
-		},
+		Run:     tagAndPush,
 	}
 )
 
 func init() {
-	// Add flags to the sub commands to logical selection of options
 	imageCmd.Flags().StringVarP(&uploadPath, "upload-to", "u", "", "specify the url to your docker registry")
 	imageCmd.Flags().StringVarP(&imageTag, "image-tag", "i", "", "specify the tag for your image")
 	imageCmd.Flags().StringVarP(&appType, "app-type", "t", "", "specifcy the application type - services/client")
@@ -176,4 +96,82 @@ func init() {
 	dockerCmd.AddCommand(composeCmd)
 	dockerCmd.AddCommand(runCmd)
 	dockerCmd.AddCommand(tagCmd)
+}
+
+func buildAndPush(cmd *cobra.Command, args []string) {
+	if uploadPath == "" {
+		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the path to your docker registry. \nRun `go-boom docker build -h` for usage guidelines!")
+		return
+	} else if imageTag == "" {
+		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the image tag. \nRun `go-boom docker build -h` for usage guidelines!")
+		return
+	} else if appType == "" {
+		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the application type. \nRun `go-boom docker build -h` for usage guidelines!")
+		return
+	}
+	tag := uploadPath + "/" + appType + "/" + imageTag
+	buildImage := "docker build --tag " + tag + " ."
+	pushImage := "docker push " + tag
+	utils.Execute(buildImage)
+	utils.Execute(pushImage)
+}
+
+func setupContainerEnvironment(cmd *cobra.Command, args []string) {
+	if composeFile == "" {
+		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the docker compose file. \nRun `go-boom docker compose -h` for usage guidelines!")
+		return
+	} else if healthcheckPorts == "" {
+		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the healthcheck ports exposed in the docker compose file. \nRun `go-boom docker compose -h` for usage guidelines!")
+		return
+	}
+	// clone config source repo if not already present in the build environment
+	path := os.Getenv("TC_CONFIG_PATH")
+	repo, _ := utils.Exists(path)
+	if !repo {
+		fmt.Println("cloning into : ", path)
+		cloneConfig := "git clone git@github.com:toyota-connected/pg-config-source.git " + path
+		utils.Execute(cloneConfig)
+	}
+	fmt.Println("repository that is being cloned already exists on the build environment")
+	setupEnvironment := "docker-compose -f " + composeFile + " up --build --detach --remove-orphans"
+	utils.Execute(setupEnvironment)
+	// check if the docker containers are healthy or not based on the ports that have been exposed from docker-compose.yaml
+	utils.Healthcheck(healthcheckPorts)
+}
+
+func executeNewmanTests(cmd *cobra.Command, args []string) {
+	if networkBridge == "" {
+		fmt.Fprintln(os.Stderr, "\nMissing data - please provide network bridge name. \nRun `docker network ls` to get a list of existing network bridges!")
+		fmt.Fprintln(os.Stderr, "\nIf network bridge does not exist then execute `go-boom docker compose` before running this command!")
+		fmt.Fprintln(os.Stderr, "\nRun `go-boom docker run -h` for usage guidelines!")
+		return
+	} else if testCollection == "" {
+		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the JSON file name for your test collection. \nRun `go-boom docker run -h` for usage guidelines!")
+		return
+	} else if environmentSpec == "" {
+		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the JSON file defining your execution environment. \nRun `go-boom docker run -h` for usage guidelines!")
+		return
+	}
+
+	pwd, _ := os.Getwd()
+	v := pwd + "/integration-tests:/etc/postman postman/newman_alpine33:3.8.3"
+	c := "/etc/postman/" + testCollection
+	e := "/etc/postman/" + environmentSpec
+	runTests := "docker run --network " + networkBridge + " -v " + v + " -c=" + c + " -e=" + e
+	utils.Execute(runTests)
+}
+
+func tagAndPush(cmd *cobra.Command, args []string) {
+	if currentImage == "" {
+		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the current image tag. \nRun `go-boom docker tag -h` for usage guidelines!")
+		return
+	} else if newImage == "" {
+		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the new image tag. \nRun `go-boom docker tag -h` for usage guidelines!")
+		return
+	}
+
+	c := "docker tag " + currentImage + " " + newImage
+	utils.Execute(c)
+	c = "docker push " + newImage
+	utils.Execute(c)
 }
