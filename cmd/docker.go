@@ -76,28 +76,6 @@ Example usage options:
 	}
 )
 
-func init() {
-	imageCmd.Flags().StringVarP(&uploadPath, "upload-to", "u", "", "specify the url to your docker registry")
-	imageCmd.Flags().StringVarP(&imageTag, "image-tag", "i", "", "specify the tag for your image")
-	imageCmd.Flags().StringVarP(&appType, "app-type", "t", "", "specifcy the application type - services/client")
-
-	composeCmd.Flags().StringVarP(&composeFile, "compose-file", "f", "", "specify the compose file to used for setting up the environment")
-	composeCmd.Flags().StringVarP(&healthcheckPorts, "healthcheck-ports", "p", "", "specify the healthcheck ports exposed in the compose file - use comma seperated format")
-
-	runCmd.Flags().StringVarP(&networkBridge, "network-bridge", "n", "", "specify the network briidge applicable for running these tests")
-	runCmd.Flags().StringVarP(&testCollection, "test-collection", "c", "", "specify the test collection file name in your integration-tests folder")
-	runCmd.Flags().StringVarP(&environmentSpec, "environment-file", "e", "", "specify the newman environment file name in your integration-tests folder")
-
-	tagCmd.Flags().StringVarP(&currentImage, "current-image", "i", "", "specify the tag of existing docker image")
-	tagCmd.Flags().StringVarP(&newImage, "new-image", "n", "", "specify the tag name to tag the existing image with")
-
-	rootCmd.AddCommand(dockerCmd)
-	dockerCmd.AddCommand(imageCmd)
-	dockerCmd.AddCommand(composeCmd)
-	dockerCmd.AddCommand(runCmd)
-	dockerCmd.AddCommand(tagCmd)
-}
-
 func buildAndPush(cmd *cobra.Command, args []string) {
 	if uploadPath == "" {
 		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the path to your docker registry. \nRun `boom docker build -h` for usage guidelines!")
@@ -174,4 +152,26 @@ func tagAndPush(cmd *cobra.Command, args []string) {
 	utils.Execute(c)
 	c = "docker push " + newImage
 	utils.Execute(c)
+}
+
+func init() {
+	imageCmd.Flags().StringVarP(&uploadPath, "upload-to", "u", "", "specify the url to your docker registry")
+	imageCmd.Flags().StringVarP(&imageTag, "image-tag", "i", "", "specify the tag for your image")
+	imageCmd.Flags().StringVarP(&appType, "app-type", "t", "", "specifcy the application type - services/client")
+
+	composeCmd.Flags().StringVarP(&composeFile, "compose-file", "f", "", "specify the compose file to used for setting up the environment")
+	composeCmd.Flags().StringVarP(&healthcheckPorts, "healthcheck-ports", "p", "", "specify the healthcheck ports exposed in the compose file - use comma seperated format")
+
+	runCmd.Flags().StringVarP(&networkBridge, "network-bridge", "n", "", "specify the network briidge applicable for running these tests")
+	runCmd.Flags().StringVarP(&testCollection, "test-collection", "c", "", "specify the test collection file name in your integration-tests folder")
+	runCmd.Flags().StringVarP(&environmentSpec, "environment-file", "e", "", "specify the newman environment file name in your integration-tests folder")
+
+	tagCmd.Flags().StringVarP(&currentImage, "current-image", "i", "", "specify the tag of existing docker image")
+	tagCmd.Flags().StringVarP(&newImage, "new-image", "n", "", "specify the tag name to tag the existing image with")
+
+	rootCmd.AddCommand(dockerCmd)
+	dockerCmd.AddCommand(imageCmd)
+	dockerCmd.AddCommand(composeCmd)
+	dockerCmd.AddCommand(runCmd)
+	dockerCmd.AddCommand(tagCmd)
 }

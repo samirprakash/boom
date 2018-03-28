@@ -102,19 +102,6 @@ Example usage options:
 	}
 )
 
-func init() {
-	// Add flags to the sub commands to logical selection of options
-	testCmd.Flags().BoolVarP(&runIntegrationTests, "integration-tests", "i", false, "Use this flag to execute integration tests")
-	testCmd.Flags().BoolVarP(&runUnitTests, "unit-tests", "u", false, "Use this flag to execute unit tests")
-
-	packageCmd.Flags().BoolVarP(&skipTests, "skip-tests", "s", false, "Use this flag to skip test while packaging")
-
-	deployCmd.Flags().StringVar(&repoID, "repository-id", "", "Provide this value to connect to the remote repository. Value must be from local .m2/settings.xml")
-
-	rootCmd.AddCommand(mavenCmd)
-	mavenCmd.AddCommand(buildCmd, validateCmd, cleanCmd, testCmd, verifyCmd, packageCmd, deployCmd)
-}
-
 func builder(cmd *cobra.Command, args []string) {
 	c := "mvn validate compile clean org.jacoco:jacoco-maven-plugin:prepare-agent test package -DskipTests sonar:sonar"
 	utils.Execute(c)
@@ -161,4 +148,16 @@ func deployer(cmd *cobra.Command, args []string) {
 	}
 	c := "mvn deploy -DrepositoryId=" + repoID
 	utils.Execute(c)
+}
+
+func init() {
+	testCmd.Flags().BoolVarP(&runIntegrationTests, "integration-tests", "i", false, "Use this flag to execute integration tests")
+	testCmd.Flags().BoolVarP(&runUnitTests, "unit-tests", "u", false, "Use this flag to execute unit tests")
+
+	packageCmd.Flags().BoolVarP(&skipTests, "skip-tests", "s", false, "Use this flag to skip test while packaging")
+
+	deployCmd.Flags().StringVar(&repoID, "repository-id", "", "Provide this value to connect to the remote repository. Value must be from local .m2/settings.xml")
+
+	rootCmd.AddCommand(mavenCmd)
+	mavenCmd.AddCommand(buildCmd, validateCmd, cleanCmd, testCmd, verifyCmd, packageCmd, deployCmd)
 }
