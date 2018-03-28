@@ -60,10 +60,10 @@ Example usage options:
 	}
 
 	// run is the subcommand to execute tests collection on an existing docker compose environment
-	runCmd = &cobra.Command{
-		Use:     "run",
+	testCmd = &cobra.Command{
+		Use:     "test",
 		Short:   "run collection of tests using newman command line runner",
-		Example: "go-boom docker run [ --network-bridge | -n ] [ --test-collection | -c ] [ --environment-spec | -e ] -h",
+		Example: "go-boom docker test [ --network-bridge | -n ] [ --test-collection | -c ] [ --environment-spec | -e ] -h",
 		Run:     executeNewmanTests,
 	}
 
@@ -84,9 +84,9 @@ func init() {
 	composeCmd.Flags().StringVarP(&composeFile, "compose-file", "f", "", "specify the compose file to used for setting up the environment")
 	composeCmd.Flags().StringVarP(&healthcheckPorts, "healthcheck-ports", "p", "", "specify the healthcheck ports exposed in the compose file - use comma seperated format")
 
-	runCmd.Flags().StringVarP(&networkBridge, "network-bridge", "n", "", "specify the network briidge applicable for running these tests")
-	runCmd.Flags().StringVarP(&testCollection, "test-collection", "c", "", "specify the test collection file name in your integration-tests folder")
-	runCmd.Flags().StringVarP(&environmentSpec, "environment-file", "e", "", "specify the newman environment file name in your integration-tests folder")
+	testCmd.Flags().StringVarP(&networkBridge, "network-bridge", "n", "", "specify the network briidge applicable for running these tests")
+	testCmd.Flags().StringVarP(&testCollection, "test-collection", "c", "", "specify the test collection file name in your integration-tests folder")
+	testCmd.Flags().StringVarP(&environmentSpec, "environment-file", "e", "", "specify the newman environment file name in your integration-tests folder")
 
 	tagCmd.Flags().StringVarP(&currentImage, "current-image", "i", "", "specify the tag of existing docker image")
 	tagCmd.Flags().StringVarP(&newImage, "new-image", "n", "", "specify the tag name to tag the existing image with")
@@ -94,7 +94,7 @@ func init() {
 	rootCmd.AddCommand(dockerCmd)
 	dockerCmd.AddCommand(imageCmd)
 	dockerCmd.AddCommand(composeCmd)
-	dockerCmd.AddCommand(runCmd)
+	dockerCmd.AddCommand(testCmd)
 	dockerCmd.AddCommand(tagCmd)
 }
 
