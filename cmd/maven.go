@@ -1,10 +1,9 @@
 package cmd
 
 import (
-	"fmt"
-	"os"
+	"strconv"
 
-	"github.com/samirprakash/boom/utils"
+	"github.com/samirprakash/boom/maven"
 	"github.com/spf13/cobra"
 )
 
@@ -46,7 +45,7 @@ Example usage options:
 		Use:     "build",
 		Short:   "All in One - Validate, Compile, Clean, Unit test, Package, Code Coverage and Sonar",
 		Example: "boom maven build -h",
-		Run:     builder,
+		Run:     maven.Build,
 	}
 
 	// validateCmd is the subcommand to validate and compile your maven based code base
@@ -54,7 +53,7 @@ Example usage options:
 		Use:     "validate",
 		Short:   "Performs a validation and checks for compilation issues",
 		Example: "boom maven validate -h",
-		Run:     validator,
+		Run:     maven.Validate,
 	}
 
 	// cleanCmd is the subcommand to clean your maven based code base
@@ -62,7 +61,7 @@ Example usage options:
 		Use:     "clean",
 		Short:   "Cleans up your workspace",
 		Example: "boom maven clean -h",
-		Run:     cleaner,
+		Run:     maven.Clean,
 	}
 
 	// testCmd is the subcommand to execute unit tests in your maven based code base
@@ -72,7 +71,9 @@ Example usage options:
 		Use:     "test",
 		Short:   "Executes unit tests facilitated with code coverage",
 		Example: "boom maven test [ --integration-tests | -i ] [ --unit-tests | -u ] -h",
-		Run:     tester,
+		Run: func(cmd *cobra.Command, args []string) {
+			maven.Test(cmd, append(args, strconv.FormatBool(runIntegrationTests), strconv.FormatBool(runUnitTests)))
+		},
 	}
 
 	// packageCmd is the subcommand to package your maven based code base
@@ -81,7 +82,9 @@ Example usage options:
 		Use:     "package",
 		Short:   "Packages your compiled code in a distributable format",
 		Example: "boom maven package [ --skip-tests | -s ] -h",
-		Run:     packager,
+		Run: func(cmd *cobra.Command, args []string) {
+			maven.Package(cmd, append(args, strconv.FormatBool(skipTests)))
+		},
 	}
 
 	// verifyCmd is the subcommand to verify the integration test results after the maven based code base has been packaged
@@ -89,7 +92,7 @@ Example usage options:
 		Use:     "verify",
 		Short:   "Runs quality checks on integration test results",
 		Example: "boom maven verify -h",
-		Run:     verifier,
+		Run:     maven.Verify,
 	}
 
 	// deployCmd is the subcommand to deploy your packaged maven based code base to remote repository
@@ -98,64 +101,16 @@ Example usage options:
 		Use:     "deploy",
 		Short:   "Copies generated package to artifactory or nexus",
 		Example: "boom maven deploy --repository-id {your-repo-id-defined-in-your-maven-settings} -h",
-		Run:     deployer,
+		Run: func(cmd *cobra.Command, args []string) {
+			maven.Deploy(cmd, append(args, repoID))
+		},
 	}
 )
-
-func builder(cmd *cobra.Command, args []string) {
-	c := "mvn validate compile clean org.jacoco:jacoco-maven-plugin:prepare-agent test package -DskipTests sonar:sonar"
-	utils.Execute(c)
-}
-
-func validator(cmd *cobra.Command, args []string) {
-	c := "mvn validate compile"
-	utils.Execute(c)
-}
-
-func cleaner(cmd *cobra.Command, args []string) {
-	c := "mvn clean"
-	utils.Execute(c)
-}
-
-func tester(cmd *cobra.Command, args []string) {
-	c := "mvn org.jacoco:jacoco-maven-plugin:prepare-agent test"
-	switch {
-	case runIntegrationTests:
-		c += " -Dcategories=integration-tests"
-	case runUnitTests:
-		c += " -Dcategories=unit-tests"
-	}
-	utils.Execute(c)
-}
-
-func packager(cmd *cobra.Command, args []string) {
-	c := "mvn package"
-	if skipTests {
-		c += " -DskipTests"
-	}
-	utils.Execute(c)
-}
-
-func verifier(cmd *cobra.Command, args []string) {
-	c := "mvn verify"
-	utils.Execute(c)
-}
-
-func deployer(cmd *cobra.Command, args []string) {
-	if repoID == "" {
-		fmt.Fprintln(os.Stderr, "Missing data - please provide the repository id. \n\nRun `boom maven deploy -h` for usage guidelines!")
-		return
-	}
-	c := "mvn deploy -DrepositoryId=" + repoID
-	utils.Execute(c)
-}
 
 func init() {
 	testCmd.Flags().BoolVarP(&runIntegrationTests, "integration-tests", "i", false, "Use this flag to execute integration tests")
 	testCmd.Flags().BoolVarP(&runUnitTests, "unit-tests", "u", false, "Use this flag to execute unit tests")
-
 	packageCmd.Flags().BoolVarP(&skipTests, "skip-tests", "s", false, "Use this flag to skip test while packaging")
-
 	deployCmd.Flags().StringVar(&repoID, "repository-id", "", "Provide this value to connect to the remote repository. Value must be from local .m2/settings.xml")
 
 	rootCmd.AddCommand(mavenCmd)
