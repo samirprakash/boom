@@ -17,7 +17,7 @@
 
 Run `go get` to install the latest version of this application
 
-`go get github.com/samirprakash/go-boom`
+`go get github.com/samirprakash/boom`
 
 # Usage
 

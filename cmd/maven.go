@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/samirprakash/go-boom/utils"
+	"github.com/samirprakash/boom/utils"
 	"github.com/spf13/cobra"
 )
 
@@ -15,12 +15,12 @@ var (
 	repoID              string
 
 	// mavenCmd is the parent command to execute maven build steps
-	// execute go-boom maven -h to check the available options
+	// execute boom maven -h to check the available options
 	mavenCmd = &cobra.Command{
 		Use:   "maven",
 		Short: "Run builds with maven",
 		Long: `
-[ go-boom maven ] provides an option to execute basic maven build steps.
+[ boom maven ] provides an option to execute basic maven build steps.
 It requires at least one sub command from the list of options to be specified.
 
 Prerequisites:
@@ -29,14 +29,14 @@ Prerequisites:
 	- Keep a settings.xml file in your .m2 folder
 
 Example usage options:
-	- go-boom maven [ build | validate | clean | test | package | verify | deploy ] -h
-	- go-boom maven build
-	- go-boom maven validate
-	- go-boom maven clean
-	- go-boom maven test [ -integration-tests | -i ] [ --unit-tests | -u ]
-	- go-boom maven package [ --skip-test | -s ]
-	- go-boom maven verify
-	- go-boom maven deploy [ --repository-id ]
+	- boom maven [ build | validate | clean | test | package | verify | deploy ] -h
+	- boom maven build
+	- boom maven validate
+	- boom maven clean
+	- boom maven test [ -integration-tests | -i ] [ --unit-tests | -u ]
+	- boom maven package [ --skip-test | -s ]
+	- boom maven verify
+	- boom maven deploy [ --repository-id ]
 		`,
 		Args: cobra.MinimumNArgs(1),
 	}
@@ -45,7 +45,7 @@ Example usage options:
 	buildCmd = &cobra.Command{
 		Use:     "build",
 		Short:   "All in One - Validate, Compile, Clean, Unit test, Package, Code Coverage and Sonar",
-		Example: "go-boom maven build -h",
+		Example: "boom maven build -h",
 		Run:     builder,
 	}
 
@@ -53,7 +53,7 @@ Example usage options:
 	validateCmd = &cobra.Command{
 		Use:     "validate",
 		Short:   "Performs a validation and checks for compilation issues",
-		Example: "go-boom maven validate -h",
+		Example: "boom maven validate -h",
 		Run:     validator,
 	}
 
@@ -61,7 +61,7 @@ Example usage options:
 	cleanCmd = &cobra.Command{
 		Use:     "clean",
 		Short:   "Cleans up your workspace",
-		Example: "go-boom maven clean -h",
+		Example: "boom maven clean -h",
 		Run:     cleaner,
 	}
 
@@ -71,7 +71,7 @@ Example usage options:
 	testCmd = &cobra.Command{
 		Use:     "test",
 		Short:   "Executes unit tests facilitated with code coverage",
-		Example: "go-boom maven test [ --integration-tests | -i ] [ --unit-tests | -u ] -h",
+		Example: "boom maven test [ --integration-tests | -i ] [ --unit-tests | -u ] -h",
 		Run:     tester,
 	}
 
@@ -80,7 +80,7 @@ Example usage options:
 	packageCmd = &cobra.Command{
 		Use:     "package",
 		Short:   "Packages your compiled code in a distributable format",
-		Example: "go-boom maven package [ --skip-tests | -s ] -h",
+		Example: "boom maven package [ --skip-tests | -s ] -h",
 		Run:     packager,
 	}
 
@@ -88,7 +88,7 @@ Example usage options:
 	verifyCmd = &cobra.Command{
 		Use:     "verify",
 		Short:   "Runs quality checks on integration test results",
-		Example: "go-boom maven verify -h",
+		Example: "boom maven verify -h",
 		Run:     verifier,
 	}
 
@@ -97,7 +97,7 @@ Example usage options:
 	deployCmd = &cobra.Command{
 		Use:     "deploy",
 		Short:   "Copies generated package to artifactory or nexus",
-		Example: "go-boom maven deploy --repository-id {your-repo-id-defined-in-your-maven-settings} -h",
+		Example: "boom maven deploy --repository-id {your-repo-id-defined-in-your-maven-settings} -h",
 		Run:     deployer,
 	}
 )
@@ -156,7 +156,7 @@ func verifier(cmd *cobra.Command, args []string) {
 
 func deployer(cmd *cobra.Command, args []string) {
 	if repoID == "" {
-		fmt.Fprintln(os.Stderr, "Missing data - please provide the repository id. \n\nRun `go-boom maven deploy -h` for usage guidelines!")
+		fmt.Fprintln(os.Stderr, "Missing data - please provide the repository id. \n\nRun `boom maven deploy -h` for usage guidelines!")
 		return
 	}
 	c := "mvn deploy -DrepositoryId=" + repoID

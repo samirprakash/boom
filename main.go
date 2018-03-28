@@ -14,7 +14,7 @@
 
 package main
 
-import "github.com/samirprakash/go-boom/cmd"
+import "github.com/samirprakash/boom/cmd"
 
 func main() {
 	cmd.Execute()
