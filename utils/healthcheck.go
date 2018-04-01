@@ -19,8 +19,7 @@ func init() {
 }
 
 // recursively retry to connect to the URL
-// attempt the call for as many attempts as specified in the code base
-// with a gap between retries based on the sleep duration
+// make specified number of attempts with a gap as per specified duration
 // returning success or error based on the conditions checked in the calling method
 func retry(attempts int, sleep time.Duration, f func() error) error {
 	err := f()
@@ -38,7 +37,7 @@ func retry(attempts int, sleep time.Duration, f func() error) error {
 	return nil
 }
 
-// healthcheck is called from docker compose command with a comma seperated string of exposed health check ports
+// Healthcheck is called from docker compose command with a comma seperated string of exposed health check ports
 // which are used to generate a well formed URL and sent to checkURLStatus() to verify if the URL is accessible or not
 func Healthcheck(healthcheckPorts string) {
 	ports := strings.Split(healthcheckPorts, ",")
@@ -56,15 +55,12 @@ func Healthcheck(healthcheckPorts string) {
 }
 
 func checkURLStatus(url string) error {
-	// build the request based on url
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
-		// return err if not able to make a request
 		return fmt.Errorf("unable to make request: %s", err)
 	}
 
 	return retry(60, time.Second*3, func() error {
-		// execute the request
 		resp, err := http.DefaultClient.Do(req)
 		fmt.Println("Atrempting to connect to : ", url)
 		if err != nil {
@@ -82,7 +78,6 @@ func checkURLStatus(url string) error {
 			// 4XX results in exit condition as the error seems to be from the calling client
 			return stop{fmt.Errorf("client error: %v", s)}
 		default:
-			// this condition is executed when there is no error and the response is as per expectation
 			fmt.Println(url + " is verified to be up and running")
 			return nil
 		}

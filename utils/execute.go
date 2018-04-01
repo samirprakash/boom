@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-// execute is a generic implementation to execute the commands that are provided
+// Execute is a generic implementation to execute the commands that are provided
 // it tokenizes the incoming string command to generate executable commands
 // and spits the output to the console
 func Execute(c string) {
