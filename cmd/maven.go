@@ -3,7 +3,7 @@ package cmd
 import (
 	"strconv"
 
-	"github.com/samirprakash/boom/maven"
+	"github.com/samirprakash/boom/pkg/maven"
 	"github.com/spf13/cobra"
 )
 

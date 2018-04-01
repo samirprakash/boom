@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"github.com/samirprakash/boom/docker"
+	"github.com/samirprakash/boom/pkg/docker"
 	"github.com/spf13/cobra"
 )
 
