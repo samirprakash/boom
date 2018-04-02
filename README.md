@@ -66,16 +66,39 @@ Run `go get` to install the latest version of this application
     -h, --help   help for docker
   ```
 
+### Available maven sub-commands and flags
+* boom maven build
+  - validates and compiles the code base
+  - cleans up the workspace
+  - runs unit tests with JaCoCo code coverage plugin
+  - packages the compiled code in the output as defined in `pom.xml`
+  - runs and uploads sonar static analysis reports
 
+* boom maven validate
+  - validates and compiles the code base
+  
+* boom maven clean
+  - cleans up the workspace
 
+* boom maven test [ --integration-tests | -i ] [ --unit-tests | -u ] -h
+  - provides option to selectively execute integration tests or unit tests
+  - with `--integration-tests` or `-i` flag executes the tests marked with a category `integration-tests`
+  - with `--unit-tests` or `-u` flag executes the tests marked with a category `unit-tests`
+  - without any flags executes all the tests which do not have a category defined
 
+* boom maven package [ --skip-test | -s ] -h
+  - generates a JAR artifact from the code base
+  - with `--skip-test` or `-s` flag provides an option to skip the test execution while packaging
 
-#### build
-#### validate
-#### clean
-#### test
-#### package
-#### verify
+* boom maven verify -h
+  - verifies the integration test results
+  - should run after the code has been packaged and integration tests have been executed
+
+* boom maven deploy [ --repository-id ] -h
+  - deploys artifacts to remote repository such as artifactory or nexus
+  - with `--repository-id` set to the `repository-id-configured-in-pom`, it would upload the artifact
+  - authentication for remote repository needs to be configured beforehand by the user
+
 #### deploy
 
 ### Docker options
