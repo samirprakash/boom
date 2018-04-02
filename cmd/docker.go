@@ -33,8 +33,8 @@ Prerequisites:
 Example usage options:
 	- boom docker [ build | compose | run | tag ] -h
 	- boom docker build [ --image-tag | -i ] [ --app-type | -t ] -h
-	- boom docker compose [ --compose-file | -f ] -h
-	- boom docker run [ --network-bridge | -n ] [ --test-collection | -c ] [ --environment-spec | -e ] -h
+	- boom docker compose [ --compose-file | -f ] [ --healthcheck-ports | -p ] -h
+	- boom docker test [ --network-bridge | -n ] [ --test-collection | -c ] [ --environment-spec | -e ] -h
 	- boom docker tag [ --current-image | -i ] [ --new-image | -n ] -h
 		`,
 		Args: cobra.MinimumNArgs(1),
