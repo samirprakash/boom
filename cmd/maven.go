@@ -29,13 +29,13 @@ Prerequisites:
 
 Example usage options:
 	- boom maven [ build | validate | clean | test | package | verify | deploy ] -h
-	- boom maven build
-	- boom maven validate
-	- boom maven clean
-	- boom maven test [ -integration-tests | -i ] [ --unit-tests | -u ]
-	- boom maven package [ --skip-test | -s ]
-	- boom maven verify
-	- boom maven deploy [ --repository-id ]
+	- boom maven build -h
+	- boom maven validate -h
+	- boom maven clean -h
+	- boom maven test [ --integration-tests | -i ] [ --unit-tests | -u ] -h
+	- boom maven package [ --skip-test | -s ] -h
+	- boom maven verify -h
+	- boom maven deploy [ --repository-id ] -h
 		`,
 		Args: cobra.MinimumNArgs(1),
 	}
