@@ -29,7 +29,46 @@ Run `go get` to install the latest version of this application
 * Setup [maven](https://maven.apache.org/) with a valid `settings.xml` in `./m2` folder
 * Install [docker](https://www.docker.com/)
 
-### Maven options
+### Available sub-commands
+* boom maven 
+  - execute maven based commands
+  - use `boom maven -h` to check options and flags
+  ```  
+  Usage:
+    boom maven [command]
+
+  Available Commands:
+    build       All in One - Validate, Compile, Clean, Unit test, Package, Code Coverage and Sonar
+    clean       Cleans up your workspace
+    deploy      Copies generated package to artifactory or nexus
+    package     Packages your compiled code in a distributable format
+    test        Executes unit tests facilitated with code coverage
+    validate    Performs a validation and checks for compilation issues
+    verify      Runs quality checks on integration test results
+
+  Flags:
+    -h, --help   help for maven
+  ```
+* boom docker
+  - execute docker commands
+  - use `boom docker -h` to check options and flags
+  ```
+  Usage:
+  boom docker [command]
+
+  Available Commands:
+    build       Build docker images and push to a remote repository
+    compose     Create docker compose environment based on the docker-compose.yaml in the code base
+    tag         tag and push images to docker registry
+    test        run collection of tests using newman command line runner
+
+  Flags:
+    -h, --help   help for docker
+  ```
+
+
+
+
 
 #### build
 #### validate
