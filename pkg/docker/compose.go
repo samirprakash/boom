@@ -4,7 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/samirprakash/boom/utils"
+	"github.com/samirprakash/boom/pkg/check"
+	"github.com/samirprakash/boom/pkg/task"
 	"github.com/spf13/cobra"
 )
 
@@ -21,15 +22,16 @@ func SetupContainerEnv(cmd *cobra.Command, args []string) {
 	}
 	// clone config source repo if not already present in the build environment
 	path := os.Getenv("TC_CONFIG_PATH")
-	repo, _ := utils.Exists(path)
+	repo, _ := check.IfDirExists(path)
+
 	if !repo {
 		fmt.Println("cloning into : ", path)
 		cloneConfig := "git clone git@github.com:toyota-connected/pg-config-source.git " + path
-		utils.Execute(cloneConfig)
+		task.Execute(cloneConfig)
 	}
 	fmt.Println("repository that is being cloned already exists on the build environment")
 	setupEnvironment := "docker-compose -f " + composeFile + " up --build --detach --remove-orphans"
-	utils.Execute(setupEnvironment)
+	task.Execute(setupEnvironment)
 	// check if the docker containers are healthy or not based on the ports that have been exposed from docker-compose.yaml
-	utils.Healthcheck(healthcheckPorts)
+	check.IfDockerComposeResponds(healthcheckPorts)
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/samirprakash/boom/utils"
+	"github.com/samirprakash/boom/pkg/task"
 	"github.com/spf13/cobra"
 )
 
@@ -16,5 +16,5 @@ func Deploy(cmd *cobra.Command, args []string) {
 		return
 	}
 	c := "mvn deploy -DrepositoryId=" + repoID
-	utils.Execute(c)
+	task.Execute(c)
 }

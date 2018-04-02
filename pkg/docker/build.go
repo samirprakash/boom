@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/samirprakash/boom/utils"
+	"github.com/samirprakash/boom/pkg/task"
 	"github.com/spf13/cobra"
 )
 
@@ -27,6 +27,6 @@ func BuildAndPush(cmd *cobra.Command, args []string) {
 	tag := uploadPath + "/" + appType + "/" + imageTag
 	buildImage := "docker build --tag " + tag + " ."
 	pushImage := "docker push " + tag
-	utils.Execute(buildImage)
-	utils.Execute(pushImage)
+	task.Execute(buildImage)
+	task.Execute(pushImage)
 }

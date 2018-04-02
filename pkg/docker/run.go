@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/samirprakash/boom/utils"
+	"github.com/samirprakash/boom/pkg/task"
 	"github.com/spf13/cobra"
 )
 
@@ -31,5 +31,5 @@ func ExecuteNewmanTests(cmd *cobra.Command, args []string) {
 	c := "/etc/postman/" + testCollection
 	e := "/etc/postman/" + environmentSpec
 	runTests := "docker run --network " + networkBridge + " -v " + v + " -c=" + c + " -e=" + e
-	utils.Execute(runTests)
+	task.Execute(runTests)
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/samirprakash/boom/utils"
+	"github.com/samirprakash/boom/pkg/task"
 	"github.com/spf13/cobra"
 )
 
@@ -21,7 +21,7 @@ func TagAndPush(cmd *cobra.Command, args []string) {
 	}
 
 	c := "docker tag " + currentImage + " " + newImage
-	utils.Execute(c)
+	task.Execute(c)
 	c = "docker push " + newImage
-	utils.Execute(c)
+	task.Execute(c)
 }

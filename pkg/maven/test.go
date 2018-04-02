@@ -3,7 +3,7 @@ package maven
 import (
 	"strconv"
 
-	"github.com/samirprakash/boom/utils"
+	"github.com/samirprakash/boom/pkg/task"
 	"github.com/spf13/cobra"
 )
 
@@ -18,5 +18,5 @@ func Test(cmd *cobra.Command, args []string) {
 	case runUnitTests:
 		c += " -Dcategories=unit-tests"
 	}
-	utils.Execute(c)
+	task.Execute(c)
 }

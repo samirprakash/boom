@@ -3,7 +3,7 @@ package maven
 import (
 	"strconv"
 
-	"github.com/samirprakash/boom/utils"
+	"github.com/samirprakash/boom/pkg/task"
 	"github.com/spf13/cobra"
 )
 
@@ -14,5 +14,5 @@ func Package(cmd *cobra.Command, args []string) {
 	if skipTests {
 		c += " -DskipTests"
 	}
-	utils.Execute(c)
+	task.Execute(c)
 }
