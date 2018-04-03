@@ -1,4 +1,4 @@
-![boom logo from http://pngtree.com/](./img/b444f6901c17b1d5cf0791c4356e5f90.png)
+![boom logo from http://pngtree.com/](./assets/img/b444f6901c17b1d5cf0791c4356e5f90.png)
 
 # Table of Contents
 
@@ -15,9 +15,13 @@
 
 # Installation
 
-Run `go get` to install the latest version of this application
+* Run `go get github.com/samirprakash/boom` to install the latest version of this application
 
-`go get github.com/samirprakash/boom`
+`or`
+
+* Clone `github.com/samirprakash/boom` to your `$GOPATH`
+* CD to the cloned repo
+* Run `go install ./cmd/boom`
 
 # Usage
 
