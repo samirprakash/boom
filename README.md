@@ -110,7 +110,7 @@ Run `go get` to install the latest version of this application
   * __boom docker compose__
     - configures any pre-requisites required for spinning up the docker containers
     - spins up a docker compose environment based on the provided docker compose file as a entry for the flag `--compose-file` or `-f`
-    - checks the health status of the docker containers based on the ports that have been exposed which can be provided to the command as a comma seperated string i.e. `9090,9091,9092......9099`
+    - checks the health status of the docker containers based on the ports that have been exposed which can be provided to the command as a comma seperated string i.e. `9090,9091,9092......9099` to the flag `--helthcheck-ports` or `-p`
 
   * __boom docker test__
     - executes newman tests on the docker compose environment
