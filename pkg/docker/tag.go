@@ -5,13 +5,12 @@ import (
 	"os"
 
 	"github.com/samirprakash/boom/pkg/task"
-	"github.com/spf13/cobra"
 )
 
 // TagAndPush tags the exisitng images and pushes them to a remote docker registry
-func TagAndPush(cmd *cobra.Command, args []string) {
-	currentImage := args[0]
-	newImage := args[1]
+func TagAndPush(flags *Flags) {
+	currentImage := flags.CurrentImage
+	newImage := flags.NewImage
 	if currentImage == "" {
 		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the current image tag. \nRun `boom docker tag -h` for usage guidelines!")
 		return

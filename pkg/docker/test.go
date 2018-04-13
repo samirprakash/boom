@@ -5,14 +5,14 @@ import (
 	"os"
 
 	"github.com/samirprakash/boom/pkg/task"
-	"github.com/spf13/cobra"
 )
 
 // ExecuteNewmanTests runs the integration test on the exisiting docker compose environment using newman CLI
-func ExecuteNewmanTests(cmd *cobra.Command, args []string) {
-	networkBridge := args[0]
-	testCollection := args[1]
-	environmentSpec := args[2]
+func ExecuteNewmanTests(flags *Flags) {
+	networkBridge := flags.NetworkBridge
+	testCollection := flags.TestCollection
+	environmentSpec := flags.EnvironmentSpec
+
 	if networkBridge == "" {
 		fmt.Fprintln(os.Stderr, "\nMissing data - please provide network bridge name. \nRun `docker network ls` to get a list of existing network bridges!")
 		fmt.Fprintln(os.Stderr, "\nIf network bridge does not exist then execute `boom docker compose` before running this command!")

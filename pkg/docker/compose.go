@@ -6,13 +6,12 @@ import (
 
 	"github.com/samirprakash/boom/pkg/check"
 	"github.com/samirprakash/boom/pkg/task"
-	"github.com/spf13/cobra"
 )
 
 // SetupContainerEnv stands up a docker container environement and verifies if the containers are ready for use by doing helthchecks
-func SetupContainerEnv(cmd *cobra.Command, args []string) {
-	composeFile := args[0]
-	healthcheckPorts := args[1]
+func SetupContainerEnv(flags *Flags) {
+	composeFile := flags.ComposeFile
+	healthcheckPorts := flags.HealthCheckPorts
 	if composeFile == "" {
 		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the docker compose file. \nRun `boom docker compose -h` for usage guidelines!")
 		return

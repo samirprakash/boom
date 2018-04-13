@@ -5,14 +5,13 @@ import (
 	"os"
 
 	"github.com/samirprakash/boom/pkg/task"
-	"github.com/spf13/cobra"
 )
 
 // BuildAndPush generates and pushes docker images to remote docker registry
-func BuildAndPush(cmd *cobra.Command, args []string) {
-	uploadPath := args[0]
-	imageTag := args[1]
-	appType := args[2]
+func BuildAndPush(flags *Flags) {
+	uploadPath := flags.UploadPath
+	imageTag := flags.ImageTag
+	appType := flags.AppType
 
 	if uploadPath == "" {
 		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the path to your docker registry. \nRun `boom docker build -h` for usage guidelines!")
