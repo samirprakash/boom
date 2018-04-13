@@ -26,7 +26,7 @@ func SetupContainerEnv(cmd *cobra.Command, args []string) {
 
 	if !repo {
 		fmt.Println("cloning into : ", path)
-		cloneConfig := "git clone git@github.com:toyota-connected/pg-config-source.git " + path
+		cloneConfig := "git clone {path-to-clone} " + path
 		task.Execute(cloneConfig)
 	}
 	fmt.Println("repository that is being cloned already exists on the build environment")
