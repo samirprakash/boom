@@ -6,6 +6,7 @@ type Flags struct {
 	AppType          string
 	UploadPath       string
 	ComposeFile      string
+	CloneURL         string
 	HealthCheckPorts string
 	NetworkBridge    string
 	TestCollection   string
