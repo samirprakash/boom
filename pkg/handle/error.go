@@ -1,4 +1,4 @@
-package check
+package handle
 
 import (
 	"fmt"
@@ -6,7 +6,7 @@ import (
 )
 
 // IfError should be used to naively panic if an error is not nil.
-func IfError(err error) {
+func Error(err error) {
 	if err == nil {
 		return
 	}

@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/samirprakash/boom/pkg/check"
+	"github.com/samirprakash/boom/pkg/handle"
 	"github.com/samirprakash/boom/pkg/task"
 	"gopkg.in/src-d/go-git.v4"
 )
@@ -14,10 +15,10 @@ func SetupContainerEnv(flags *Flags) {
 	composeFile := flags.ComposeFile
 	healthcheckPorts := flags.HealthCheckPorts
 	if composeFile == "" {
-		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the docker compose file. \nRun `boom docker compose -h` for usage guidelines!")
+		handle.Info("\nMissing data - please provide the docker compose file. \nRun `boom docker compose -h` for usage guidelines!")
 		return
 	} else if healthcheckPorts == "" {
-		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the healthcheck ports exposed in the docker compose file. \nRun `boom docker compose -h` for usage guidelines!")
+		handle.Info("\nMissing data - please provide the healthcheck ports exposed in the docker compose file. \nRun `boom docker compose -h` for usage guidelines!")
 		return
 	}
 
@@ -33,23 +34,16 @@ func SetupContainerEnv(flags *Flags) {
 			URL:               url,
 			RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 		})
-		if err != nil {
-			fmt.Printf("\x1b[31;1m%s\x1b[0m\n", fmt.Sprintf("error: %s", err))
-			return
-		}
+		handle.Error(err)
 	} else {
 		fmt.Println("repository that is being cloned already exists on the build environment")
 		r, err := git.PlainOpen(path)
-		if err != nil {
-			fmt.Printf("\x1b[31;1m%s\x1b[0m\n", fmt.Sprintf("error: %s", err))
-		}
+		handle.Error(err)
 		w, err := r.Worktree()
-		if err != nil {
-			fmt.Printf("\x1b[31;1m%s\x1b[0m\n", fmt.Sprintf("error: %s", err))
-		}
+		handle.Error(err)
 		err = w.Pull(&git.PullOptions{RemoteName: "origin"})
 		if err != nil {
-			fmt.Printf("\x1b[31;1m%s\x1b[0m\n", fmt.Sprintf("error: %s", err))
+			handle.Info(err.Error())
 		}
 	}
 

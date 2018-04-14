@@ -1,9 +1,7 @@
 package docker
 
 import (
-	"fmt"
-	"os"
-
+	"github.com/samirprakash/boom/pkg/handle"
 	"github.com/samirprakash/boom/pkg/task"
 )
 
@@ -12,10 +10,10 @@ func TagAndPush(flags *Flags) {
 	currentImage := flags.CurrentImage
 	newImage := flags.NewImage
 	if currentImage == "" {
-		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the current image tag. \nRun `boom docker tag -h` for usage guidelines!")
+		handle.Info("\nMissing data - please provide the current image tag. \nRun `boom docker tag -h` for usage guidelines!")
 		return
 	} else if newImage == "" {
-		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the new image tag. \nRun `boom docker tag -h` for usage guidelines!")
+		handle.Info("\nMissing data - please provide the new image tag. \nRun `boom docker tag -h` for usage guidelines!")
 		return
 	}
 

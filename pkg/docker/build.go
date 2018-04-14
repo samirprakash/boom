@@ -1,9 +1,7 @@
 package docker
 
 import (
-	"fmt"
-	"os"
-
+	"github.com/samirprakash/boom/pkg/handle"
 	"github.com/samirprakash/boom/pkg/task"
 )
 
@@ -14,13 +12,13 @@ func BuildAndPush(flags *Flags) {
 	appType := flags.AppType
 
 	if uploadPath == "" {
-		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the path to your docker registry. \nRun `boom docker build -h` for usage guidelines!")
+		handle.Info("\nMissing data - please provide the path to your docker registry. \nRun `boom docker build -h` for usage guidelines!")
 		return
 	} else if imageTag == "" {
-		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the image tag. \nRun `boom docker build -h` for usage guidelines!")
+		handle.Info("\nMissing data - please provide the image tag. \nRun `boom docker build -h` for usage guidelines!")
 		return
 	} else if appType == "" {
-		fmt.Fprintln(os.Stderr, "\nMissing data - please provide the application type. \nRun `boom docker build -h` for usage guidelines!")
+		handle.Info("\nMissing data - please provide the application type. \nRun `boom docker build -h` for usage guidelines!")
 		return
 	}
 	tag := uploadPath + "/" + appType + "/" + imageTag

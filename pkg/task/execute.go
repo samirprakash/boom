@@ -4,6 +4,8 @@ import (
 	"os"
 	"os/exec"
 	"strings"
+
+	"github.com/samirprakash/boom/pkg/handle"
 )
 
 // Execute is a generic implementation to execute the commands that are provided
@@ -18,7 +20,5 @@ func Execute(c string) {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	err := cmd.Run()
-	if err != nil {
-		os.Exit(2)
-	}
+	handle.Error(err)
 }

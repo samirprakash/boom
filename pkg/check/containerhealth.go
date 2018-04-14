@@ -6,6 +6,8 @@ import (
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/samirprakash/boom/pkg/handle"
 )
 
 // wrapped error struct to be returned when retry is not going to work i.e. 4XX error codes
@@ -48,7 +50,7 @@ func IfDockerComposeResponds(healthcheckPorts string) {
 		// check URL status - 5XX, 4XX, 200 Ok
 		err := checkURLStatus(url)
 		if err != nil {
-			fmt.Printf("not able to checl the status for %v", url)
+			handle.Info("not able to check the status for %v", url)
 			break
 		}
 	}
@@ -78,7 +80,7 @@ func checkURLStatus(url string) error {
 			// 4XX results in exit condition as the error seems to be from the calling client
 			return stop{fmt.Errorf("client error: %v", s)}
 		default:
-			fmt.Println(url + " is verified to be up and running")
+			handle.Info(url + " is verified to be up and running")
 			return nil
 		}
 	})
