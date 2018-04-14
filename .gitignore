@@ -19,8 +19,5 @@ build/
 # Exclude vendor files
 vendor/
 
-# Binaries
-boom
-
 # System files
 .DS_Store
