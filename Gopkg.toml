@@ -42,5 +42,5 @@
   unused-packages = true
 
 [[constraint]]
-  name = "github.com/briandowns/spinner"
-  version = "1.0.0"
+  name = "gopkg.in/src-d/go-git.v4"
+  version = "4.3.0"
