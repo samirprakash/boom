@@ -43,7 +43,7 @@ func SetupContainerEnv(flags *Flags) {
 		handle.Error(err)
 		err = w.Pull(&git.PullOptions{RemoteName: "origin"})
 		if err != nil {
-			handle.Info(err.Error())
+			handle.Warning(err.Error())
 		}
 	}
 
