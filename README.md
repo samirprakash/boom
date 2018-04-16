@@ -107,12 +107,13 @@
   * __boom docker build__
     - builds a docker image based on a `Dockerfile`
     - as a default, needs to be executed from the folder which contains your `Dockerfile`
-    - pushes the built image to a remote docker registry
+    - pushes the built image to a remote docker registry, only if the current branch is `master` or `develop`
     - with `--image-tag` or `-i` flag set to the value of the tag for the image will tag the image accordingly
     - with `--app-type` or `-t` flag set to the type of service i.e. -  client/service/demo - would append this value to the tag
 
   * __boom docker compose__
     - configures any pre-requisites required for spinning up the docker containers
+    - `--repo-name` or `-r` can be used to clone the `config-source` repo locally by providing the repository name as an entry to this flag
     - spins up a docker compose environment based on the provided docker compose file as a entry for the flag `--compose-file` or `-f`
     - checks the health status of the docker containers based on the ports that have been exposed which can be provided to the command as a comma seperated string i.e. `9090,9091,9092......9099` to the flag `--helthcheck-ports` or `-p`
 
