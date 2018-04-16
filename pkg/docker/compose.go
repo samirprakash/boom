@@ -1,7 +1,6 @@
 package docker
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/samirprakash/boom/pkg/check"
@@ -14,6 +13,7 @@ import (
 func SetupContainerEnv(flags *Flags) {
 	composeFile := flags.ComposeFile
 	healthcheckPorts := flags.HealthCheckPorts
+	repoName := flags.RepoName
 	if composeFile == "" {
 		handle.Info("\nMissing data - please provide the docker compose file. \nRun `boom docker compose -h` for usage guidelines!")
 		return
@@ -27,24 +27,26 @@ func SetupContainerEnv(flags *Flags) {
 	uname := os.Getenv("GIT_USERNAME")
 	pwd := os.Getenv("GIT_PASSWORD")
 	repo, _ := check.IfDirExists(path)
-	url := "https://" + uname + ":" + pwd + "@github.com/" + flags.CloneURL + ".git"
 
 	if !repo {
+		if repoName == "" {
+			handle.Info("\nMissing data - please provide the repo name to be cloned. \nRun `boom docker compose -h` for usage guidelines!")
+			return
+		}
+		url := "https://" + uname + ":" + pwd + "@github.com/" + repoName + ".git"
 		_, err := git.PlainClone(path, false, &git.CloneOptions{
 			URL:               url,
 			RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 		})
 		handle.Error(err)
-	} else {
-		fmt.Println("repository that is being cloned already exists on the build environment")
-		r, err := git.PlainOpen(path)
-		handle.Error(err)
-		w, err := r.Worktree()
-		handle.Error(err)
-		err = w.Pull(&git.PullOptions{RemoteName: "origin"})
-		if err != nil {
-			handle.Warning(err.Error())
-		}
+	}
+	r, err := git.PlainOpen(path)
+	handle.Error(err)
+	w, err := r.Worktree()
+	handle.Error(err)
+	err = w.Pull(&git.PullOptions{RemoteName: "origin"})
+	if err != nil {
+		handle.Warning(err.Error())
 	}
 
 	setupEnvironment := "docker-compose -f " + composeFile + " up --build --detach --remove-orphans"

@@ -10,7 +10,7 @@ var (
 	appType          string
 	uploadPath       string
 	composeFile      string
-	cloneURL         string
+	repoName         string
 	healthcheckPorts string
 	networkBridge    string
 	testCollection   string
@@ -34,7 +34,7 @@ Prerequisites:
 Example usage options:
 	- boom docker [ build | compose | run | tag ] -h
 	- boom docker build [ --image-tag | -i ] [ --app-type | -t ] -h
-	- boom docker compose [ --compose-file | -f ] [ --healthcheck-ports | -p ] -h
+	- boom docker compose [ --compose-file | -f ] [ --healthcheck-ports | -p ] [ --repo-name | -n ] -h
 	- boom docker test [ --network-bridge | -n ] [ --test-collection | -c ] [ --environment-spec | -e ] -h
 	- boom docker tag [ --current-image | -i ] [ --new-image | -n ] -h
 		`,
@@ -60,11 +60,11 @@ Example usage options:
 	composeCmd = &cobra.Command{
 		Use:     "compose",
 		Short:   "Create docker compose environment based on the docker-compose.yaml in the code base",
-		Example: "boom docker compose [ --compose-file | -f ] [ --healthcheck-ports | -p ] [ --clone-url | -u ] -h",
+		Example: "boom docker compose [ --compose-file | -f ] [ --healthcheck-ports | -p ] [ --repo-name | -n ] -h",
 		Run: func(cmd *cobra.Command, args []string) {
 			flags := docker.Flags{
 				ComposeFile:      composeFile,
-				CloneURL:         cloneURL,
+				RepoName:         repoName,
 				HealthCheckPorts: healthcheckPorts,
 			}
 			docker.SetupContainerEnv(&flags)
@@ -106,7 +106,7 @@ func init() {
 	imageCmd.Flags().StringVarP(&imageTag, "image-tag", "i", "", "specify the tag for your image")
 	imageCmd.Flags().StringVarP(&appType, "app-type", "t", "", "specify the application type - services/client")
 	composeCmd.Flags().StringVarP(&composeFile, "compose-file", "f", "", "specify the compose file to used for setting up the environment")
-	composeCmd.Flags().StringVarP(&cloneURL, "clone-url", "u", "", "specify the path to the config-source repository i.e. username/reponame")
+	composeCmd.Flags().StringVarP(&repoName, "repo-name", "n", "", "specify the path to the config-source repository i.e. username/reponame")
 	composeCmd.Flags().StringVarP(&healthcheckPorts, "healthcheck-ports", "p", "", "specify the healthcheck ports exposed in the compose file - use comma seperated format")
 	runCmd.Flags().StringVarP(&networkBridge, "network-bridge", "n", "", "specify the network briidge applicable for running these tests")
 	runCmd.Flags().StringVarP(&testCollection, "test-collection", "c", "", "specify the test collection file name in your integration-tests folder")
