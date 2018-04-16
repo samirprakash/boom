@@ -1,6 +1,7 @@
 package docker
 
 import (
+	"github.com/samirprakash/boom/pkg/check"
 	"github.com/samirprakash/boom/pkg/handle"
 	"github.com/samirprakash/boom/pkg/task"
 )
@@ -21,9 +22,13 @@ func BuildAndPush(flags *Flags) {
 		handle.Info("\nMissing data - please provide the application type. \nRun `boom docker build -h` for usage guidelines!")
 		return
 	}
+
 	tag := uploadPath + "/" + appType + "/" + imageTag
 	buildImage := "docker build --tag " + tag + " ."
-	pushImage := "docker push " + tag
 	task.Execute(buildImage)
-	task.Execute(pushImage)
+
+	if check.IfImageIsToBePushed() {
+		pushImage := "docker push " + tag
+		task.Execute(pushImage)
+	}
 }

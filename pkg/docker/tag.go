@@ -1,6 +1,7 @@
 package docker
 
 import (
+	"github.com/samirprakash/boom/pkg/check"
 	"github.com/samirprakash/boom/pkg/handle"
 	"github.com/samirprakash/boom/pkg/task"
 )
@@ -19,6 +20,9 @@ func TagAndPush(flags *Flags) {
 
 	c := "docker tag " + currentImage + " " + newImage
 	task.Execute(c)
-	c = "docker push " + newImage
-	task.Execute(c)
+
+	if check.IfImageIsToBePushed() {
+		c = "docker push " + newImage
+		task.Execute(c)
+	}
 }
