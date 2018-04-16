@@ -99,6 +99,16 @@ Example usage options:
 			docker.TagAndPush(&flags)
 		},
 	}
+
+	// clean is the subcommand to clean up containers created by `go-doom docker compose` command
+	clearCmd = &cobra.Command{
+		Use:     "clean",
+		Short:   "clean up docker containers spinned up by docker compose",
+		Example: "boom docker clean -h",
+		Run: func(cmd *cobra.Command, args []string) {
+			docker.Clean()
+		},
+	}
 )
 
 func init() {
@@ -115,8 +125,5 @@ func init() {
 	tagCmd.Flags().StringVarP(&newImage, "new-image", "n", "", "specify the tag name to tag the existing image with")
 
 	rootCmd.AddCommand(dockerCmd)
-	dockerCmd.AddCommand(imageCmd)
-	dockerCmd.AddCommand(composeCmd)
-	dockerCmd.AddCommand(runCmd)
-	dockerCmd.AddCommand(tagCmd)
+	dockerCmd.AddCommand(imageCmd, composeCmd, runCmd, tagCmd, clearCmd)
 }
