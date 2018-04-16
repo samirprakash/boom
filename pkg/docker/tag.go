@@ -21,7 +21,7 @@ func TagAndPush(flags *Flags) {
 	c := "docker tag " + currentImage + " " + newImage
 	task.Execute(c)
 
-	if check.IfImageIsToBePushed() {
+	if check.IsBranchMorD() {
 		c = "docker push " + newImage
 		task.Execute(c)
 	}

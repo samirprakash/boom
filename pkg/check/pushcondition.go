@@ -10,7 +10,7 @@ import (
 
 // IfImageIsToBePushed checks if the current branch is master or develop and returns a bool
 // Images should be pushed to remote repository from develop or master branches only
-func IfImageIsToBePushed() bool {
+func IsBranchMorD() bool {
 
 	pwd, _ := os.Getwd()
 	r, err := git.PlainOpen(pwd)

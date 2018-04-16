@@ -27,7 +27,7 @@ func BuildAndPush(flags *Flags) {
 	buildImage := "docker build --tag " + tag + " ."
 	task.Execute(buildImage)
 
-	if check.IfImageIsToBePushed() {
+	if check.IsBranchMorD() {
 		pushImage := "docker push " + tag
 		task.Execute(pushImage)
 	}
