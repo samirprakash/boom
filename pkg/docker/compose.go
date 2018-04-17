@@ -6,7 +6,6 @@ import (
 	"github.com/samirprakash/boom/pkg/check"
 	"github.com/samirprakash/boom/pkg/handle"
 	"github.com/samirprakash/boom/pkg/task"
-	"gopkg.in/src-d/go-git.v4"
 )
 
 // SetupContainerEnv stands up a docker container environement and verifies if the containers are ready for use by doing helthchecks
@@ -24,33 +23,18 @@ func SetupContainerEnv(flags *Flags) {
 
 	// clone config source repo if not already present in the build environment
 	path := os.Getenv("TC_CONFIG_PATH")
-	uname := os.Getenv("GIT_USERNAME")
-	pwd := os.Getenv("GIT_PASSWORD")
 	repo, _ := check.IfDirExists(path)
-
 	if !repo {
 		if repoName == "" {
 			handle.Info("\nMissing data - please provide the repo name to be cloned. \nRun `boom docker compose -h` for usage guidelines!")
 			return
 		}
-		url := "https://" + uname + ":" + pwd + "@github.com/" + repoName + ".git"
-		_, err := git.PlainClone(path, false, &git.CloneOptions{
-			URL:               url,
-			RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
-		})
-		handle.Error(err)
+		task.Clone(path, repoName)
 	}
-	r, err := git.PlainOpen(path)
-	handle.Error(err)
-	w, err := r.Worktree()
-	handle.Error(err)
-	err = w.Pull(&git.PullOptions{RemoteName: "origin"})
-	if err != nil {
-		handle.Warning(err.Error())
-	}
+	task.Fetch(path)
 
 	setupEnvironment := "docker-compose -f " + composeFile + " up --build --detach --remove-orphans"
 	task.Execute(setupEnvironment)
-	// check if the docker containers are healthy or not based on the ports that have been exposed from docker-compose.yaml
+	// check if the docker containers are healthy or not based on the exposed ports
 	check.IfDockerComposeResponds(healthcheckPorts)
 }
