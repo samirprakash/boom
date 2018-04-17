@@ -37,6 +37,7 @@ Example usage options:
 	- boom docker compose [ --compose-file | -f ] [ --healthcheck-ports | -p ] [ --repo-name | -n ] -h
 	- boom docker test [ --network-bridge | -n ] [ --test-collection | -c ] [ --environment-spec | -e ] -h
 	- boom docker tag [ --current-image | -i ] [ --new-image | -n ] -h
+	- boom docker clean -h
 		`,
 		Args: cobra.MinimumNArgs(1),
 	}
