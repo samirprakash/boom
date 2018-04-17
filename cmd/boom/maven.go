@@ -43,7 +43,9 @@ Example usage options:
 		Use:     "build",
 		Short:   "All in One - Validate, Compile, Clean, Unit test, Package, Code Coverage and Sonar",
 		Example: "boom maven build -h",
-		Run:     maven.Build,
+		Run: func(cmd *cobra.Command, args []string) {
+			maven.Build()
+		},
 	}
 
 	// validateCmd is the subcommand to validate and compile your maven based code base
@@ -51,7 +53,9 @@ Example usage options:
 		Use:     "validate",
 		Short:   "Performs a validation and checks for compilation issues",
 		Example: "boom maven validate -h",
-		Run:     maven.Validate,
+		Run: func(cmd *cobra.Command, args []string) {
+			maven.Validate()
+		},
 	}
 
 	// cleanCmd is the subcommand to clean your maven based code base
@@ -59,7 +63,9 @@ Example usage options:
 		Use:     "clean",
 		Short:   "Cleans up your workspace",
 		Example: "boom maven clean -h",
-		Run:     maven.Clean,
+		Run: func(cmd *cobra.Command, args []string) {
+			maven.Clean()
+		},
 	}
 
 	// testCmd is the subcommand to execute unit tests in your maven based code base
@@ -97,7 +103,9 @@ Example usage options:
 		Use:     "verify",
 		Short:   "Runs quality checks on integration test results",
 		Example: "boom maven verify -h",
-		Run:     maven.Verify,
+		Run: func(cmd *cobra.Command, args []string) {
+			maven.Verify()
+		},
 	}
 
 	// deployCmd is the subcommand to deploy your packaged maven based code base to remote repository
