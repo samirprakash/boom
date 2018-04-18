@@ -140,5 +140,5 @@ func init() {
 	deployCmd.Flags().StringVar(&repoID, "repository-id", "", "Provide this value to connect to the remote repository. Value must be from local .m2/settings.xml")
 
 	rootCmd.AddCommand(mavenCmd)
-	mavenCmd.AddCommand(buildCmd, validateCmd, cleanCmd, testCmd, verifyCmd, packageCmd, deployCmd)
+	mavenCmd.AddCommand(setupCmd, buildCmd, validateCmd, cleanCmd, testCmd, verifyCmd, packageCmd, deployCmd)
 }
