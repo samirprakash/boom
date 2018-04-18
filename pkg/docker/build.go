@@ -2,8 +2,8 @@ package docker
 
 import (
 	"github.com/samirprakash/boom/pkg/check"
-	"github.com/samirprakash/boom/pkg/handle"
 	"github.com/samirprakash/boom/pkg/task"
+	log "github.com/sirupsen/logrus"
 )
 
 // BuildAndPush generates and pushes docker images to remote docker registry
@@ -13,14 +13,11 @@ func BuildAndPush(flags *Flags) {
 	appType := flags.AppType
 
 	if uploadPath == "" {
-		handle.Info("\nMissing data - please provide the path to your docker registry. \nRun `boom docker build -h` for usage guidelines!")
-		return
+		log.Fatal("\nMissing data - please provide the path to your docker registry. \nRun `boom docker build -h` for usage guidelines!")
 	} else if imageTag == "" {
-		handle.Info("\nMissing data - please provide the image tag. \nRun `boom docker build -h` for usage guidelines!")
-		return
+		log.Fatal("\nMissing data - please provide the image tag. \nRun `boom docker build -h` for usage guidelines!")
 	} else if appType == "" {
-		handle.Info("\nMissing data - please provide the application type. \nRun `boom docker build -h` for usage guidelines!")
-		return
+		log.Fatal("\nMissing data - please provide the application type. \nRun `boom docker build -h` for usage guidelines!")
 	}
 
 	tag := uploadPath + "/" + appType + "/" + imageTag

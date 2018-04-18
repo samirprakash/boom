@@ -3,8 +3,8 @@ package docker
 import (
 	"os"
 
-	"github.com/samirprakash/boom/pkg/handle"
 	"github.com/samirprakash/boom/pkg/task"
+	log "github.com/sirupsen/logrus"
 )
 
 // ExecuteNewmanTests runs the integration test on the exisiting docker compose environment using newman CLI
@@ -14,16 +14,13 @@ func ExecuteNewmanTests(flags *Flags) {
 	environmentSpec := flags.EnvironmentSpec
 
 	if networkBridge == "" {
-		handle.Info("\nMissing data - please provide network bridge name. \nRun `docker network ls` to get a list of existing network bridges!")
-		handle.Info("\nIf network bridge does not exist then execute `boom docker compose` before running this command!")
-		handle.Info("\nRun `boom docker run -h` for usage guidelines!")
-		return
+		log.Info("\nMissing data - please provide network bridge name. \nRun `docker network ls` to get a list of existing network bridges!")
+		log.Info("\nIf network bridge does not exist then execute `boom docker compose` before running this command!")
+		log.Fatal("\nRun `boom docker run -h` for usage guidelines!")
 	} else if testCollection == "" {
-		handle.Info("\nMissing data - please provide the JSON file name for your test collection. \nRun `boom docker run -h` for usage guidelines!")
-		return
+		log.Fatal("\nMissing data - please provide the JSON file name for your test collection. \nRun `boom docker run -h` for usage guidelines!")
 	} else if environmentSpec == "" {
-		handle.Info("\nMissing data - please provide the JSON file defining your execution environment. \nRun `boom docker run -h` for usage guidelines!")
-		return
+		log.Fatal("\nMissing data - please provide the JSON file defining your execution environment. \nRun `boom docker run -h` for usage guidelines!")
 	}
 
 	pwd, _ := os.Getwd()

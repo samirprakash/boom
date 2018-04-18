@@ -15,7 +15,7 @@
 package main
 
 import (
-	"github.com/samirprakash/boom/pkg/handle"
+	log "github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -36,5 +36,7 @@ var rootCmd = &cobra.Command{
 // This is called by main.main(). It only needs to happen once to the rootCmd.
 func Execute() {
 	err := rootCmd.Execute()
-	handle.Error(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

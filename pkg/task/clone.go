@@ -3,7 +3,7 @@ package task
 import (
 	"os"
 
-	"github.com/samirprakash/boom/pkg/handle"
+	log "github.com/sirupsen/logrus"
 	git "gopkg.in/src-d/go-git.v4"
 )
 
@@ -17,5 +17,7 @@ func Clone(path, repoName string) {
 		URL:               url,
 		RecurseSubmodules: git.DefaultSubmoduleRecursionDepth,
 	})
-	handle.Error(err)
+	if err != nil {
+		log.Fatal(err)
+	}
 }

@@ -4,8 +4,8 @@ import (
 	"os"
 
 	"github.com/samirprakash/boom/pkg/check"
-	"github.com/samirprakash/boom/pkg/handle"
 	"github.com/samirprakash/boom/pkg/task"
+	log "github.com/sirupsen/logrus"
 )
 
 // SetupContainerEnv stands up a docker container environement and verifies if the containers are ready for use by doing helthchecks
@@ -14,11 +14,9 @@ func SetupContainerEnv(flags *Flags) {
 	healthcheckPorts := flags.HealthCheckPorts
 	repoName := flags.RepoName
 	if composeFile == "" {
-		handle.Info("\nMissing data - please provide the docker compose file. \nRun `boom docker compose -h` for usage guidelines!")
-		return
+		log.Fatal("\nMissing data - please provide the docker compose file. \nRun `boom docker compose -h` for usage guidelines!")
 	} else if healthcheckPorts == "" {
-		handle.Info("\nMissing data - please provide the healthcheck ports exposed in the docker compose file. \nRun `boom docker compose -h` for usage guidelines!")
-		return
+		log.Fatal("\nMissing data - please provide the healthcheck ports exposed in the docker compose file. \nRun `boom docker compose -h` for usage guidelines!")
 	}
 
 	// clone config source repo if not already present in the build environment
@@ -26,8 +24,7 @@ func SetupContainerEnv(flags *Flags) {
 	repo, _ := check.IfDirExists(path)
 	if !repo {
 		if repoName == "" {
-			handle.Info("\nMissing data - please provide the repo name to be cloned. \nRun `boom docker compose -h` for usage guidelines!")
-			return
+			log.Fatal("\nMissing data - please provide the repo name to be cloned. \nRun `boom docker compose -h` for usage guidelines!")
 		}
 		task.Clone(path, repoName)
 	}
