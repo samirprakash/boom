@@ -8,7 +8,7 @@ import (
 	git "gopkg.in/src-d/go-git.v4"
 )
 
-// IfImageIsToBePushed checks if the current branch is master or develop and returns a bool
+// IsBranchMorD checks if the current branch is master or develop and returns a bool
 // Images should be pushed to remote repository from develop or master branches only
 func IsBranchMorD() bool {
 
