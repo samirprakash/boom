@@ -38,6 +38,16 @@ Example usage options:
 		Args: cobra.MinimumNArgs(1),
 	}
 
+	// setupCmd is the subcommand to setup a maven build environment
+	setupCmd = &cobra.Command{
+		Use:     "setup",
+		Short:   "Setup maven locally",
+		Example: "boom maven setup -h",
+		Run: func(cmd *cobra.Command, args []string) {
+			maven.Setup()
+		},
+	}
+
 	// buildCmd is the subcommand to execute all the maven build steps in one go for your maven based code base
 	buildCmd = &cobra.Command{
 		Use:     "build",
