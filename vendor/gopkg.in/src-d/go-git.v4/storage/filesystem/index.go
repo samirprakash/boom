@@ -1,10 +1,11 @@
 package filesystem
 
 import (
+	"bufio"
 	"os"
 
 	"gopkg.in/src-d/go-git.v4/plumbing/format/index"
-	"gopkg.in/src-d/go-git.v4/storage/filesystem/internal/dotgit"
+	"gopkg.in/src-d/go-git.v4/storage/filesystem/dotgit"
 	"gopkg.in/src-d/go-git.v4/utils/ioutil"
 )
 
@@ -41,7 +42,7 @@ func (s *IndexStorage) Index() (i *index.Index, err error) {
 
 	defer ioutil.CheckClose(f, &err)
 
-	d := index.NewDecoder(f)
+	d := index.NewDecoder(bufio.NewReader(f))
 	err = d.Decode(idx)
 	return idx, err
 }

@@ -142,9 +142,16 @@ func (w *Worktree) diffStagingWithWorktree(reverse bool) (merkletrie.Changes, er
 
 func (w *Worktree) excludeIgnoredChanges(changes merkletrie.Changes) merkletrie.Changes {
 	patterns, err := gitignore.ReadPatterns(w.Filesystem, nil)
-	if err != nil || len(patterns) == 0 {
+	if err != nil {
 		return changes
 	}
+
+	patterns = append(patterns, w.Excludes...)
+
+	if len(patterns) == 0 {
+		return changes
+	}
+
 	m := gitignore.NewMatcher(patterns)
 
 	var res merkletrie.Changes
@@ -300,6 +307,10 @@ func (w *Worktree) doAddDirectory(idx *index.Index, s Status, directory string) 
 
 		var a bool
 		if file.IsDir() {
+			if file.Name() == GitDirName {
+				// ignore special git directory
+				continue
+			}
 			a, err = w.doAddDirectory(idx, s, name)
 		} else {
 			a, _, err = w.doAddFile(idx, s, name)
